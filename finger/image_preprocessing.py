@@ -36,6 +36,8 @@ And based on the FINGERPRINT RECOGNITION USING MINUTIA SCORE MATCHING thresholdi
 
 """ 
 So basically the original image from the sensor is ass 
-And the features from the image dont show 
+And the features from the image dont show enough details that can be said to actually
+train a model 
+
 
 """
