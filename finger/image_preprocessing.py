@@ -49,7 +49,7 @@ import cv2
 def main () : 
     path = r"C:\Users\blade_mx4\Documents\code\Fingerprint\finger\tets.bmp"
     img = cv2.imread(path , cv2.IMREAD_GRAYSCALE)
-    img = cv2.GaussianBlur(img,(15,15),0)
+    #img = cv2.GaussianBlur(img,(15,15),0)
     calheobj = cv2.createCLAHE(clipLimit= 35,tileGridSize=(1,1)) 
     clahe_img = calheobj.apply(img) 
 
@@ -62,4 +62,12 @@ def main () :
     cv2.destroyAllWindows() 
 
 if __name__ == "__main__" :
-    main()
+    main() 
+
+"""
+Other possible tries 
+
+canny + thresh 
+
+
+"""
