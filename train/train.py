@@ -10,7 +10,7 @@ Goals :
 import tensorflow as tf
 import keras
 from keras import layers
-from utils import get_filepaths_and_labels, make_pair_indices, build_pair_dataset, euclidean_distance, Loss
+from utils import get_filepaths_and_labels, make_pair_indices, build_pair_dataset, euclidean_distance, Loss,accuracy
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 
 
@@ -74,7 +74,7 @@ Siamese.summary()
 Siamese.compile(
     loss=Loss,
     optimizer=keras.optimizers.RMSprop(learning_rate=0.001),  
-    jit_compile=True,
+    jit_compile=True,metrics=[accuracy]
 )
 
 reduce = ReduceLROnPlateau(
@@ -95,5 +95,6 @@ auto_save = ModelCheckpoint(
 )
 
 Siamese.fit(
-    train, epochs=35, callbacks=[reduce, earlystop, auto_save]
+    train, epochs=35, callbacks=[reduce, earlystop, auto_save] 
 )
+Siamese.save("MODEL.keras")
