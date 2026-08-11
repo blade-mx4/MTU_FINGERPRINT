@@ -6,7 +6,6 @@ import cv2
 
 
 def main() : 
-    path = r"C:\Users\blade_mx4\Documents\code\Fingerprint\finger\tets.bmp"
     img = cv2.imread(path)
     gray  = cv2.cvtColor(img , cv2.COLOR_BGR2GRAY) 
 
@@ -39,7 +38,7 @@ So basically the original image from the sensor is ass
 And the features from the image dont show enough details that can be said to actually
 train a model 
 
-So approach would be calche and hist 
+So approach would be calche  
 
 """
 
@@ -50,13 +49,17 @@ import cv2
 def main () : 
     path = r"C:\Users\blade_mx4\Documents\code\Fingerprint\finger\tets.bmp"
     img = cv2.imread(path , cv2.IMREAD_GRAYSCALE)
+    img = cv2.GaussianBlur(img,(15,15),0)
+    calheobj = cv2.createCLAHE(clipLimit= 35,tileGridSize=(1,1)) 
+    clahe_img = calheobj.apply(img) 
 
-    calheobj = cv2.createCLAHE(clipLimit= 5 ,tileGridSize=(8,8)) 
-    clahe_img = cv2.apply(img) 
+    _ , thresh = cv2.threshold(clahe_img , 50,255,cv2.THRESH_BINARY)
 
-    cv2.imshow("Original" ,img)
     cv2.imshow("clahe" , clahe_img)
-
+    cv2.imshow("Original" ,img)
+    cv2.imshow("Thresh", thresh)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows() 
 
 if __name__ == "__main__" :
     main()
