@@ -3,6 +3,11 @@ import tensorflow as tf
 import numpy as np
 import random
 import pathlib
+import keras 
+from keras import ops
+
+
+
 
 SHAPE = (224, 224)
 
@@ -74,3 +79,16 @@ def build_pair_dataset(filepaths, pair_indices, pair_labels, batch_size=8):
     ds = ds.prefetch(tf.data.AUTOTUNE)
 
     return ds
+
+def euclidean_distance(vector) : 
+    X, Y = vector 
+    sum_sqr = ops.sum(ops.square(X - Y),axis=1 , keepdims=True) 
+    distance = ops.sqrt(ops.maximum(sum_sqr,keras.backend.epsilon()))
+    return distance 
+
+def Loss(y_true,y_pred,margin=1) : 
+    squr_pred = ops.square(y_pred)
+    margin_sqr = ops.square(ops.maximum(margin -(y_pred), 0)) 
+    LOSS = ops.mean((1-y_true) * squr_pred + (y_true) * margin_sqr)  
+
+    return LOSS
