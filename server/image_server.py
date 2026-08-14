@@ -12,7 +12,7 @@ import pandas as pd
 # ============================== CONFIG and HYPER =========================== # 
 
 app = Flask(__name__)
-path = ''
+path = ''   #<--- Making it empty ? dont want to remove this cause i sorted out the use of globals but fuck it 
 # ================================ SEVER FUNCTIONS ============================= #
 
 def db_csv(ID : int,Name,Surname,Matric :int ,Dept ) :  #<--- Y should i stress with csv library when python can do it 
@@ -60,14 +60,13 @@ def student_id() :
     file.save(f"{path}/{file.filename}")
    # ==  Saving File to path == #
    return jsonify({
+         "Mesaage" : "SuccessFully Enrolled Student ",
          "ID"   :ID ,
          "Name" : Name ,
          "Surname": Surname ,
          "Matric" : Matric ,
          "Dept"   : Dept , 
-         "File"   :file
-
-      })
+      }),True                                      #<---- Incase i want to add a seperate logic later on 
 
 if __name__ == "__main__" : app.run(port=90 , debug=True)
 
@@ -75,6 +74,7 @@ if __name__ == "__main__" : app.run(port=90 , debug=True)
 
 
 """
+
 # =============== Image Receive ================= #
 @app.route('/upload' , methods = ['POST'])
 def upload() :
