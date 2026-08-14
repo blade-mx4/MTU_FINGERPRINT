@@ -47,17 +47,19 @@ import cv2
 
 
 def main () : 
-    path = r"C:\Users\blade_mx4\Documents\code\Fingerprint\finger\tets.bmp"
+    path = r"C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\finger\victor.bmp"
     img = cv2.imread(path , cv2.IMREAD_GRAYSCALE)
     #img = cv2.GaussianBlur(img,(15,15),0)
-    calheobj = cv2.createCLAHE(clipLimit= 35,tileGridSize=(1,1)) 
+    calheobj = cv2.createCLAHE(clipLimit= 50,tileGridSize=(1,1)) 
     clahe_img = calheobj.apply(img) 
 
-    _ , thresh = cv2.threshold(clahe_img , 50,255,cv2.THRESH_BINARY)
+    _ , thresh = cv2.threshold(clahe_img , 2,255,cv2.THRESH_OTSU + cv2.THRESH_BINARY)
+
+    img__ =  cv2.bitwise_and(clahe_img , img)
 
     cv2.imshow("clahe" , clahe_img)
     cv2.imshow("Original" ,img)
-    cv2.imshow("Thresh", thresh)
+    cv2.imshow("Thresh", img__)
     cv2.waitKey(0)
     cv2.destroyAllWindows() 
 
