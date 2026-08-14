@@ -12,16 +12,71 @@ import pandas as pd
 # ============================== CONFIG and HYPER =========================== # 
 
 app = Flask(__name__)
-Folder = './Finger_Images' 
-os.makedirs(Folder,exist_ok=True) 
-app.config['Folder'] = Folder 
-
-
-
+path = ''
 # ================================ SEVER FUNCTIONS ============================= #
 
+def db_csv(ID : int,Name,Surname,Matric :int ,Dept ) :  #<--- Y should i stress with csv library when python can do it 
+   #Add logic for matric less than 10 
+   parent_dir = './DB'
+   os.makedirs(parent_dir,exist_ok=True)  
+   global path
+   Data = {
+      "ID"      : [ID],
+      "Name"    : [Name] ,
+      "Surname" : [Surname],
+      "Matric"  : [Matric],
+      "Dept"    : [Dept]
+   }
+
+   data = pd.DataFrame(Data) 
+
+   path = os.path.join(parent_dir,(Name)) 
+
+  
+   os.makedirs(path,exist_ok=True)
+   
+   data.to_csv(f"{path}/{Name}_{Surname}.csv",index=False)
+
+
+
+# ============================================================================= #
+
+@app.route('/' ,methods = ['POST'])
+def student_id() : 
+   # =============== Receive ID from incoming json ================ #
+   student_data = json.loads(request.form["student_data"]) 
+   ID = student_data.get("ID")
+   Name = student_data.get("Name")
+   Surname = student_data.get("Surname")
+   Matric = student_data.get("Matric")
+   Dept = student_data.get("Dept")
+
+   # ================= RECEIVE img from incoming json =========== #
+   file = request.files.get("student_img")
+
+   if file : 
+    db_csv(ID,Name,Surname,Matric,Dept)
+
+    file.save(f"{path}/{file.filename}")
+   # ==  Saving File to path == #
+   return jsonify({
+         "ID"   :ID ,
+         "Name" : Name ,
+         "Surname": Surname ,
+         "Matric" : Matric ,
+         "Dept"   : Dept , 
+         "File"   :file
+
+      })
+
+if __name__ == "__main__" : app.run(port=90 , debug=True)
+
+
+
+
+"""
 # =============== Image Receive ================= #
-@app.route('/upload' , methods = ['POST','GET'])
+@app.route('/upload' , methods = ['POST'])
 def upload() :
     if request.method == "POST" : 
         if 'file' not in request.files : 
@@ -46,23 +101,7 @@ def upload() :
               }
            ),200 
 
-def db_csv(Name,Surname,Matric) :  #<--- Y should i stress with csv library when python can do it 
-   #Add logic for matric less than 10 
-
-   Data = {
-      "Name"    : [Name] ,
-      "Surname" : [Surname],
-      "Matric"  : [Matric] 
-   }
-
-   data = pd.DataFrame(Data)  
-   os.makedirs('./DB',exist_ok=True)
-   path = f"./DB"
-   file_name = f"{Name}_{Surname}_{Matric}"
-
-   DB  = data.to_csv(f"{path}/{file_name}.csv" , index=False)  
-
-@app.route('/' ,methods = ["POST"]) #<-- Test function to collect json and save to a textfile db prototype
+@app.route('/ID' ,methods = ["POST"]) #<-- Test function to collect json and save to a textfile db prototype
 def id (): #<=== Receive the json of the students and save to a file 
    if request.is_json : 
       data = request.get_json() 
@@ -70,17 +109,20 @@ def id (): #<=== Receive the json of the students and save to a file
       name = data.get('Name')
       surname = data.get('Surname')
       matric = data.get('Matric')
+      id = data.get("ID")
 
-      db_csv(name,surname,matric)  #<----------- Folder Creation function 
+      db_csv(name,surname,matric,id)  #<----------- csv_creation
 
       return jsonify(
          {
-            "Name"   : name ,
-            "Matric" :matric ,
+            "Name"      : name ,
+            "Surname"   : surname,
+            "Matric"    : matric ,
+            "ID"        : id
 
          }
       ),200
    
    else : return jsonify({"Message" : "Error"})
 if __name__ == "__main__" : app.run(port=90 ,debug=True)
-    
+    """ 
