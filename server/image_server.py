@@ -6,7 +6,7 @@ to make a modular kind of server
 Security Flawed Bastard 
 """
 import os 
-from flask import Blueprint, jsonify ,json ,request
+from quart import Blueprint, jsonify ,json ,request
 import pandas as pd 
 
 
@@ -43,9 +43,10 @@ def db_csv(ID : int,Name,Surname,Matric :int ,Dept ) :  #<--- Y should i stress 
 # ============================================================================= #
 
 @img_server_bp.route('/upload' ,methods = ['POST'])
-def student_id() : 
+async def student_id() : 
    # =============== Receive ID from incoming json ================ #
-   student_data = json.loads(request.form["student_data"]) 
+   student_data_async =  await request.form
+   student_data = json.loads(student_data_async['student_data'])
    ID = student_data.get("ID")
    Name = student_data.get("Name")
    Surname = student_data.get("Surname")
@@ -53,14 +54,14 @@ def student_id() :
    Dept = student_data.get("Dept")
 
    # ================= RECEIVE img from incoming json =========== #
-   file = request.files.get("student_img")
+   file =  (await request.files).get("student_img")
 
    if file : 
     db_csv(ID,Name,Surname,Matric,Dept)
 
-    file.save(f"{path}/{file.filename}")
+    await file.save(f"{path}/{file.filename}")
    # ==  Saving File to path == #
-   return jsonify({
+   return  jsonify({
          "Mesaage" : "SuccessFully Enrolled Student ",
          "Status" :True,
          "ID"   :ID ,

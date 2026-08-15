@@ -1,8 +1,14 @@
-from flask import Flask 
+"""
+Moved from flask to quart 
+They r basically the same framework 
+
+
+"""
+from quart import Quart
 from image_server import img_server_bp 
 from asgiref.wsgi import WsgiToAsgi
 
-app = Flask(__name__) 
+app = Quart(__name__) 
 
 def Server_Main() :
     app.register_blueprint(img_server_bp) 

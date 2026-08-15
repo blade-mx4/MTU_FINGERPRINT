@@ -1,5 +1,6 @@
 """
-Client to send the images from the sensor to the flask server  
+Ported from flask -> quarts | async server implemented 
+Client to send the images from the sensor to the flask / quarts server  
 
 # ===================== NOTES =================================#
 
@@ -42,5 +43,5 @@ def post_data_img(port,baud_rate,file_name,Name,Surname,Matric : int ,Dept, ID :
             ) 
             return print(feed.json()) 
     except Exception as e : print(f"ERROR[{e}]") 
-if __name__ == "__main__" : post_data_img('COM9' , 115200 ,'img','Agu','vuc',24010305032,'CYB',192)
+if __name__ == "__main__" : post_data_img('COM9' , 115200 ,'img','Adu','vuc',24010305032,'CYB',192)
 
