@@ -12,7 +12,7 @@ import pandas as pd
 
 # ============================== CONFIG and HYPER =========================== # 
 
-img_server_bp = Blueprint('image_server',__name__)
+img_server_bp = Blueprint('image_server_api',__name__,url_prefix='/image_server')#<-- url_prefix makes add localhost:9000/img_server/uploads
 path = ''   #<--- Making it empty ? dont want to remove this cause i sorted out the use of globals but fuck it 
 # ================================ SEVER FUNCTIONS ============================= #
 
@@ -42,7 +42,7 @@ def db_csv(ID : int,Name,Surname,Matric :int ,Dept ) :  #<--- Y should i stress 
 
 # ============================================================================= #
 
-@img_server_bp.route('/' ,methods = ['POST'])
+@img_server_bp.route('/upload' ,methods = ['POST'])
 def student_id() : 
    # =============== Receive ID from incoming json ================ #
    student_data = json.loads(request.form["student_data"]) 
@@ -62,14 +62,15 @@ def student_id() :
    # ==  Saving File to path == #
    return jsonify({
          "Mesaage" : "SuccessFully Enrolled Student ",
+         "Status" :True,
          "ID"   :ID ,
          "Name" : Name ,
          "Surname": Surname ,
          "Matric" : Matric ,
          "Dept"   : Dept , 
-      }),True                                      #<---- Incase i want to add a seperate logic later on 
+      }),200                                
 
-if __name__ == "__main__" : img_server_bp.run(port=90 , debug=True)
+#if __name__ == "__main__" : img_server_bp.run(port=90 , debug=True)
 
 
 

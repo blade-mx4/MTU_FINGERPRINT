@@ -18,7 +18,7 @@ import json
 
 # ====================== CONFIGS and HYPER PARAM ============================== #
 
-url =   'http://127.0.0.1:90'                             #<-- Route to upload images 
+url =   'http://127.0.0.1:9000/image_server/upload'                             #<-- Route to upload images 
 
 
 
