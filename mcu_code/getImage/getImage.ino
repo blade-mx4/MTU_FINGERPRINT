@@ -1,16 +1,11 @@
 #include <HardwareSerial.h>
 #include <fpm.h>
+/*
+Using HardWare Serial for my esp32 
 
-/* Send a fingerprint image to a PC.
- *
- * This example should be executed alongside the Python script in the extras folder,
- * which will run on the PC to receive and assemble the fingerprint image.
- */
 
-/*  pin #2 is Arduino RX <==> Sensor TX
- *  pin #3 is Arduino TX <==> Sensor RX
- */
-//SoftwareSerial fserial(2, 3);
+
+*/
 
 #define RX_PIN 16
 #define TX_PIN 17

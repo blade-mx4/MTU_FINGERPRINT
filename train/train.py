@@ -10,20 +10,23 @@ Goals :
 import tensorflow as tf
 import keras
 from keras import layers
-from utils import get_filepaths_and_labels, make_pair_indices, build_pair_dataset, euclidean_distance, Loss,accuracy
+from utils import load,euclidean_distance, Loss,accuracy
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
-
+from sklearn.model_selection import train_test_split 
+import numpy as np 
 
 # =========================================DATA LOADING AND HYPER PARAM============================================ #
 
 path = r'C:\Users\blade_mx4\Documents\Datasets\DOG_CAT'
 
-filepaths, labels, class_names = get_filepaths_and_labels(path)
-pair_indices, pair_labels = make_pair_indices(labels)
+X , Y = load(path) 
 
-filepaths_tensor = tf.constant(filepaths)  # needed for tf.gather inside the tf.data graph
-train = build_pair_dataset(filepaths_tensor, pair_indices, pair_labels, batch_size=16)
+x_train , __ , y_train ,__ = train_test_split(X, Y ,random_state=42,test_size=0.2)
 
+X = np.array(X)
+print(X.shape)
+
+"""
 # ======================================= EMBEDDING MODEL ================================== #
 
 def build_embedding_model():
@@ -97,4 +100,4 @@ auto_save = ModelCheckpoint(
 Siamese.fit(
     train, epochs=35, callbacks=[reduce, earlystop, auto_save] 
 )
-Siamese.save("MODEL.keras")
+Siamese.save("MODEL.keras")"""

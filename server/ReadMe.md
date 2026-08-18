@@ -161,13 +161,14 @@ Store
 
 ```text
 Capture
+[img / id]   
    │
    ▼
 Server
-   │
+   │    id
    ├──────────────> Database
    │                    │
-   │                    ▼
+   │[img]               ▼
    │                Stored Images
    │                    │
    ▼                    │

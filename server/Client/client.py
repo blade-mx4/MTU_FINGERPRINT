@@ -23,13 +23,16 @@ url =   'http://127.0.0.1:9000/image_server/upload'                             
 
 
 
-def post_data_img(port,baud_rate,file_name,Name,Surname,Matric : int ,Dept, ID : int) : 
+#==============================================================================#
+
+def post_data_img(port,baud_rate,file_name,ID : int , Name:str , Surname:str , Matric : int ,Dept : str,  Level :int ) : 
     file_name = f"{file_name}.bmp"
     data = {
         "ID"      : ID ,
         "Name"    : Name ,
         "Surname" : Surname ,
-        "Matric"  : Matric , 
+        "Matric"  : Matric ,
+        "Level"   : Level, 
         "Dept"    : Dept
     }
     try : 
@@ -43,5 +46,5 @@ def post_data_img(port,baud_rate,file_name,Name,Surname,Matric : int ,Dept, ID :
             ) 
             return print(feed.json()) 
     except Exception as e : print(f"ERROR[{e}]") 
-if __name__ == "__main__" : post_data_img('COM9' , 115200 ,'img','Adu','vuc',24010305032,'CYB',192)
+if __name__ == "__main__" : post_data_img('COM9' , 115200 ,'img',212,'Adu','vuc',24010305032,'CYB',200)
 

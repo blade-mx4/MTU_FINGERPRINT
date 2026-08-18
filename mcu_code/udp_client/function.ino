@@ -19,7 +19,7 @@ namespace wifi {
         Serial.begin(115200) ;
         while (true) {
           
-          if (WiFi.waitForConenctionResult() != WL_CONNECTED ){
+          if (WiFi.waitForConnectResult() != WL_CONNECTED ){
             Serial.println("Connection Error") ;
             delay(2000);
             return false ;

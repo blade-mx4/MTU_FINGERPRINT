@@ -16,7 +16,7 @@ img_server_bp = Blueprint('image_server_api',__name__,url_prefix='/image_server'
 path = ''   #<--- Making it empty ? dont want to remove this cause i sorted out the use of globals but fuck it 
 # ================================ SEVER FUNCTIONS ============================= #
 
-def db_csv(ID : int,Name,Surname,Matric :int ,Dept ) :  #<--- Y should i stress with csv library when python can do it 
+def db_csv(ID : int,Name : str ,Surname : str ,Matric :int ,Dept : str , Level :int ) :  #<--- Y should i stress with csv library when python can do it 
    #Add logic for matric less than 10 
    parent_dir = './DB'
    os.makedirs(parent_dir,exist_ok=True)  
@@ -26,7 +26,8 @@ def db_csv(ID : int,Name,Surname,Matric :int ,Dept ) :  #<--- Y should i stress 
       "Name"    : [Name] ,
       "Surname" : [Surname],
       "Matric"  : [Matric],
-      "Dept"    : [Dept]
+      "Dept"    : [Dept],
+      "Level"    :[Level]
    }
 
    data = pd.DataFrame(Data) 
@@ -52,6 +53,7 @@ async def student_id() :
    Surname = student_data.get("Surname")
    Matric = student_data.get("Matric")
    Dept = student_data.get("Dept")
+   Level = student_data.get("Level")
 
    # ================= RECEIVE img from incoming json =========== #
    file =  (await request.files).get("student_img")
@@ -69,6 +71,7 @@ async def student_id() :
          "Surname": Surname ,
          "Matric" : Matric ,
          "Dept"   : Dept , 
+         "Level"  :Level,
       }),200                                
 
 #if __name__ == "__main__" : img_server_bp.run(port=90 , debug=True)

@@ -25,7 +25,7 @@ Each Sensor and Module would have seperate files containing functons
              |--- function.h <-- for decelring functions
              |--- main.cpp   <-- Main script
              |--- lcd.cpp    <-- Fucntions for the lcd  
-             |--- udp_client <-- img_send function 
+             |--- udp_client <-- img_send function and wifi 
              
 
 the code would be to long obviously and functional is the best approach plus 
