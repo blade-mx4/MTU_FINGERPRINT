@@ -7,10 +7,18 @@ And the params most match too
 #define FUNCTION_H  
 #include<Arduino.h> 
 
-namespace wifi {
+// ================= Wifi Functions ==================== //
+namespace wifi { // didnt want to use class and also didnt want to use function 
+                //Result of my compromise 
+
       void wifi_udp_info(const char *ip ,const char *name , int port );
       bool init(const char * name , const char *pwd) ;
       void udp_send(String input) ;
 
 }
+
+// ================== img -> udp ===================== //
+uint32_t imageToUdp(void) ;
+void Finger_Status() ; 
+
 #endif 

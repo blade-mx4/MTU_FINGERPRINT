@@ -18,11 +18,12 @@ namespace wifi {
       Serial.print("Server Port : ") ; Serial.print(port) ;
       
       }
+      
       bool init (const char *name , const char *pwd) {  // Checking if Connected  not yet implemeted the loop to keep tryin 
         WiFi.mode(WIFI_STA) ;
         WiFi.begin(name , pwd) ;
         Serial.begin(115200) ;
-             
+        
         while (WiFi.waitForConnectResult() != WL_CONNECTED ){ // Checking for if connected 
           Serial.println("Connection Error") ;
           delay(2000);
@@ -41,6 +42,11 @@ namespace wifi {
         udp.print(input) ; Serial.println("Transmitting Packet ....."); // <-- For Debug 
         udp.endPacket() ; 
       }
-}
+
+      
+
+
+
+}     
 
 

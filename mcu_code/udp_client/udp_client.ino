@@ -9,14 +9,14 @@ const char * ip = "192.168.0.102" ;
 const int port = 8080 ;
 
 
+
 void setup() {
   Serial.begin(115200) ;
   wifi :: wifi_udp_info(ip , network_name ,port ) ; 
-  if (wifi :: init(network_name , pwd) == true )
-      wifi :: udp_send("Victor") ;
+  wifi :: init(network_name , pwd) ;
 }
 
 
 void loop() {
-      wifi :: udp_send("HELLO FUCKS") ;
+  imageToUdp() ; 
 }
