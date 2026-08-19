@@ -8,7 +8,7 @@ send to the server
 #include<WiFi.h> 
 #include<NetworkUdp.h> 
 
-NetworkUDP udp ; 
+NetworkUDP udpClient ; 
 
 namespace wifi {
       void wifi_udp_info(const char *ip ,const char *name , int port ) { //To print wifi and up info to help in debuggin
@@ -31,19 +31,19 @@ namespace wifi {
         }
           Serial.println("Connected") ;
           return true ;
-          break ;
+        
           
 
 
       }
       
       void udp_send(String input ){
-        udp.beginPacket(ip ,port) ;
-        udp.print(input) ; Serial.println("Transmitting Packet ....."); // <-- For Debug 
-        udp.endPacket() ; 
+        udpClient.beginPacket(ip ,port) ;
+        udpClient.print(input) ; Serial.println("Transmitting Packet ....."); // <-- For Debug 
+        udpClient.endPacket() ; 
       }
 
-      
+
 
 
 

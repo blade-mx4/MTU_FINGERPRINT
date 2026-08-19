@@ -13,12 +13,10 @@ namespace wifi { // didnt want to use class and also didnt want to use function
 
       void wifi_udp_info(const char *ip ,const char *name , int port );
       bool init(const char * name , const char *pwd) ;
-      void udp_send(String input) ;
+      void udp_send(String input) ;c:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\mcu_code\udp_client\function.ino
 
 }
 
 // ================== img -> udp ===================== //
-uint32_t imageToUdp(void) ;
-void Finger_Status() ; 
 
 #endif 
