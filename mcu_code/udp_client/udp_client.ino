@@ -5,15 +5,18 @@
 const char * network_name = "Blade_net" ;  
 const char * pwd = "upperechelon" ;
 
-const char * ip = "192.168.0.100" ;
+const char * ip = "192.168.0.102" ;
 const int port = 8080 ;
 
 
 void setup() {
-  wifi :: init(network_name , pwd) ;
+  Serial.begin(115200) ;
+  wifi :: wifi_udp_info(ip , network_name ,port ) ; 
+  if (wifi :: init(network_name , pwd) == true )
+      wifi :: udp_send("Victor") ;
 }
 
 
 void loop() {
-
+      wifi :: udp_send("HELLO FUCKS") ;
 }
