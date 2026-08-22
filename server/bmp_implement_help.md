@@ -8,3 +8,37 @@ and some logic to put them back together " You would likely need a header format
 ```
 since there is a bmp header format in the getImages.py 
 i can  use that and concate with a udp.server # but how do i simulate bytes transfer before going to esp32 
+
+so after not being able to do the impossible and being limited by my own imagination 
+i had to compromise the wired 
+
+'''
+# proposed design for infernence 
+ __________________
+|                  | <-- wired{over usb} -> [img , id]   
+|       esp32      |---------------------------------                         
+|__________________|                                |
+                                                    |
+                                                    |
+                                                    |
+                                                    |
+                                                    V
+                                            __________________
+                                            |getImages.py + |     <------ 
+                                            |rq             |
+                                            |_______________|
+
+                                                    |               
+                                                    V               
+                                        ________________________
+                                        |                       |   <---
+                                        |        server         |       |-----------
+                                        |_______________________|   <---
+
+
+
+
+
+
+
+'''

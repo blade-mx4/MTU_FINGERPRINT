@@ -18,7 +18,7 @@ path = ''   #<--- Making it empty ? dont want to remove this cause i sorted out 
 
 def db_csv(ID : int,Name : str ,Surname : str ,Matric :int ,Dept : str , Level :int ) :  #<--- Y should i stress with csv library when python can do it 
    #Add logic for matric less than 10 
-   parent_dir = './DB'
+   parent_dir = './DB_STUDENTS'
    os.makedirs(parent_dir,exist_ok=True)  
    global path
    Data = {
@@ -59,13 +59,11 @@ async def student_id() :
    file =  (await request.files).get("student_img")
 
    if file : 
-    db_csv(ID,Name,Surname,Matric,Dept)
+    db_csv(ID,Name,Surname,Matric,Dept,Level)
 
     await file.save(f"{path}/{file.filename}")
    # ==  Saving File to path == #
    return  jsonify({
-         "Mesaage" : "SuccessFully Enrolled Student ",
-         "Status" :True,
          "ID"   :ID ,
          "Name" : Name ,
          "Surname": Surname ,
