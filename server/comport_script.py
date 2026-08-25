@@ -1,3 +1,13 @@
+"""
+This Script runs through a singular pizero conected to let say 4 esp32
+
+then loops through automatically throughthe available ports and connectes automatically
+instead of hardcoding ports
+
+
+"""
+
+
 import serial 
 import serial.tools.list_ports 
 
@@ -13,7 +23,6 @@ def port_look() :   #<-- Search for port available and put it in a list
 
 
 def ser_init() -> bool : 
-    
     while True :
         try :
             for i in range(len(port_look())) :
@@ -24,12 +33,7 @@ def ser_init() -> bool :
                     
         except Exception as e : 
             print(f"ERROR -> [{e}]")
-            
-
-
-
-
-
+            #return False            
 
 
 
