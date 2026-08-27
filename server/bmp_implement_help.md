@@ -3,7 +3,7 @@
 so after not being able to do the impossible and being limited by my own imagination 
 i had to compromise the wired 
 
-# proposed design for infernence 
+# PROPOSED DESIGN 1 for infernence 
 ```
  __________________                                       ___________________                           ________________________
 |                  | <-- wired{comport} --> [img , id]   |                   |            {id}         |                        | [  The pizero receives the id from the esp32 and sends via wifi ]
@@ -26,13 +26,7 @@ i had to compromise the wired
                  |                                                              |                   |
                   ----------------- [if imag passes certain threshold]          |        model      |{for multiple channel every thing would have to be multiple instance }
                                                                                 |___________________|                                  
+```
 
-
-
-
-
-
-
-
-
-'''
+# PROPOSED DESIGN 2 
+design 1 would have a bit of a lag issue so the best is edge compute 
