@@ -5,10 +5,10 @@ This Script runs through a singular pizero conected to let say 4 esp32
 
 then loops through automatically throughthe available ports and connectes automatically
 instead of hardcoding ports{which works}
+also allowing multiport connection from different ports with threading 
+
 
 todo : 
-
-
 
 """
 
@@ -22,14 +22,14 @@ def port_look() -> list :   #<-- Search for port available and put it in a list
         available = port.device 
         port_list.append(available)
         if available == None : break 
-    return port_list #print(port_list)
+    return port_list #<--- returns the comport list eg { comport 10,comport 11 } #print(port_list)
 
 
-def ser_init() -> bool : 
+def ser_init(port_name : str ) -> bool : 
     while True :
         try :
             for i in range(len(port_look())) :
-                ser = serial.Serial(port=port_look()[i] , baudrate=9600,timeout=None) 
+                ser = serial.Serial(port=, baudrate=9600,timeout=None) 
                 if ser : 
                     print("Connected -> ")
                     return True
@@ -39,5 +39,4 @@ def ser_init() -> bool :
             #return False          
 
 
-if __name__ == "__main__" : 
-    ser_init()
+# if __name__ == "__main__" : 
