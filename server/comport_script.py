@@ -11,32 +11,45 @@ also allowing multiport connection from different ports with threading
 todo : 
 
 """
+#May turn this into a module 
 
-import serial 
+from serial import Serial 
 import serial.tools.list_ports 
+from threading import Thread
+from time import sleep
 
-def port_look() -> list :   #<-- Search for port available and put it in a list  
+def port_look() -> list :   #<-- Search for port available and returns list of port   
     global port             #<-- Since am using the PORTNO as an IP Address like system to help the pi route back data to the port no
     port_list = []  
     for port in serial.tools.list_ports.comports() : 
         available = port.device 
         port_list.append(available)
         if available == None : break 
-    return port_list #<--- returns the comport list eg { comport 10,comport 11 } #print(port_list)
+    return port_list              #<--- returns the comport list eg { comport 10,comport 11 } #print(port_list)
 
 
-def ser_init(port_name : str ) -> bool : 
+def ser_init(port_name : str )  : #<--- serial port connection init 
     while True :
         try :
-            for i in range(len(port_look())) :
-                ser = serial.Serial(port=, baudrate=9600,timeout=None) 
-                if ser : 
-                    print("Connected -> ")
+            for i in range(len(port_look())) :  #<-- To just keep an open range of ports then close when range gaped
+                ser = Serial(port=port_name, baudrate=9600,timeout=None) 
+                if ser.is_open : 
+                    print(f"Connected -> [{port_name}]")
                     return True
                     
         except Exception as e : 
-            print("Connection Exception....")#print(f"ERROR -> [{e}]")
-            #return False          
+            print(f"ERROR -> [ {e} ] ")         #<-- Essential for debugging pyserial error r suprizingliy detailed 
+            sleep(1)                             #<-- Anti os Spamming
 
+def multi_port() :                                 #<-- threading implementation
+    port_list = port_look() 
+    threads = []                                  #<-- thread pool , felt like calling it that nothing u can do about it 
 
-# if __name__ == "__main__" : 
+    for port in port_list : 
+        t = Thread(target=ser_init, args=(port,)) #<--  heads up due to iteration port is a str
+        threads.append(t)
+        t.start()
+    for t in threads : t.join()                     #<--  race condition prevention 
+
+if __name__ == "__main__" : 
+    multi_port()
