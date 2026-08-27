@@ -3,6 +3,12 @@
 so after not being able to do the impossible and being limited by my own imagination 
 i had to compromise the wired 
 
+# So basically am implementing  star topoloy  
+```
+A central  server for img retrival and db stuff 
+
+The esp32 and pizer is a node
+```
 # PROPOSED DESIGN 1 for infernence 
 ```
  __________________                                       ___________________                           ________________________
