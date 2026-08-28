@@ -14,12 +14,12 @@ char printfBuf[PRINTF_BUF_SZ];
 
 void info(void) {
     Serial.begin(115200) ;
-    serial.begin(57600,SERIAL_8N1,RX,TX) ;
+    serial.begin(57600,SERIAL_8N1,RX,TX) ;//<- this is constant 
     if (finger.begin()) {
-        Serial.print("Sensor Connected") ;
+        Serial.println("Sensor Connected") ;
     }else{
-        Serial.print("Sensor Disconnected") ;
-        while(1) yield ;
+        Serial.println("Sensor Disconnected Reset MCU ") ;
+        while(true)  { yield() ;} // to stop the program and prevent it from moving this causes error  
     }
 
 }

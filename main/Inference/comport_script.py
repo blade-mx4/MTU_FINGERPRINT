@@ -12,12 +12,13 @@ todo :
 
 """
 #May turn this into a module 
-
 from serial import Serial 
 import serial.tools.list_ports 
 from threading import Thread
 from time import sleep
+from Client import getImage
 
+BAUDRATE = 115200
 def port_look() -> list :   #<-- Search for port available and returns list of port   
     global port             #<-- Since am using the PORTNO as an IP Address like system to help the pi route back data to the port no
     port_list = []  
@@ -28,15 +29,16 @@ def port_look() -> list :   #<-- Search for port available and returns list of p
     return port_list              #<--- returns the comport list eg { comport 10,comport 11 } #print(port_list)
 
 
-def ser_init(port_name : str )  : #<--- serial port connection init 
+def ser_init(port_name : str ) -> bool  : #<--- serial port connection init 
+    global ser #<--  So other functions can acces it 
     while True :
         try :
-            for i in range(len(port_look())) :  #<-- To just keep an open range of ports then close when range gaped
-                ser = Serial(port=port_name, baudrate=9600,timeout=None) 
-                if ser.is_open : 
-                    print(f"Connected -> [{port_name}]")
-                    return True
-                    
+            # for i in range(len(port_look())) :  #<-- To just keep an open range of ports then close when range gaped
+            ser = Serial(port=port_name, baudrate=BAUDRATE,timeout=None) 
+            if ser.is_open : 
+                print(f"Connected -> [{port_name}]")
+                return True
+                
         except Exception as e : 
             print(f"ERROR -> [ {e} ] ")         #<-- Essential for debugging pyserial error r suprizingliy detailed 
             sleep(1)                             #<-- Anti os Spamming
@@ -51,5 +53,23 @@ def multi_port() :                                 #<-- threading implementation
         t.start()
     for t in threads : t.join()                     #<--  race condition prevention 
 
+def main() : 
+    multi_port() #<-- initalize multithrading 
+    if ser_init() == True : 
+        if ser.is_open : 
+            line = ser.read_until(b' Input ID : ').decode('utf-8')
+            print(line)
+
+            sleep(1) 
+
+            user_input = input("Enter ID : ").strip()
+            ser.write((user_input + '\n').encode()) 
+
+            sleep(0.1)
+
+            response = ser.read(ser.in_waiting or 1 ).decode(errors='replace') #<--  to read the remaining bytes 
+            print(response) 
+            
+
 if __name__ == "__main__" : 
-    multi_port()
+    
