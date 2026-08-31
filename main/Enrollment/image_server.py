@@ -13,14 +13,17 @@ import pandas as pd
 # ============================== CONFIG and HYPER =========================== # 
 
 img_server_bp = Blueprint('image_server_api',__name__,url_prefix='/image_server')#<-- url_prefix makes add localhost:9000/img_server/uploads
-path = ''   #<--- Making it empty ? dont want to remove this cause i sorted out the use of globals but fuck it 
+
+cw_dir = os.getcwd()
+parent_dir = 'DB_STUDENTS'
+file_path = os.path.join(cw_dir , parent_dir)
+
+os.makedirs(parent_dir ,exist_ok=True)
+
+
 # ================================ SEVER FUNCTIONS ============================= #
 
-def db_csv(ID : int,Name : str ,Surname : str ,Matric :int ,Dept : str , Level :int ) :  #<--- Y should i stress with csv library when python can do it 
-   #Add logic for matric less than 10 
-   parent_dir = './DB_STUDENTS'
-   os.makedirs(parent_dir,exist_ok=True)  
-   global path
+def db_csv(ID : int,Name : str ,Surname : str ,Matric :int ,Dept : str , Level :int ) :  #<--- Y should i stress with csv library when pandascan do it 
    Data = {
       "ID"      : [ID],
       "Name"    : [Name] ,
@@ -32,12 +35,9 @@ def db_csv(ID : int,Name : str ,Surname : str ,Matric :int ,Dept : str , Level :
 
    data = pd.DataFrame(Data) 
 
-   path = os.path.join(parent_dir,(Name)) 
-
   
-   os.makedirs(path,exist_ok=True)
    
-   data.to_csv(f"{path}/{Name}_{Surname}.csv",index=False)
+   data.to_csv(f"{file_path}/{Name}_{Surname}.csv",index=False)
 
 
 
@@ -52,24 +52,25 @@ async def student_id() :
    Name = student_data.get("Name")
    Surname = student_data.get("Surname")
    Matric = student_data.get("Matric")
-   Dept = student_data.get("Dept")
    Level = student_data.get("Level")
-
+   Dept = student_data.get("Dept")
+   
    # ================= RECEIVE img from incoming json =========== #
    file =  (await request.files).get("student_img")
 
    if file : 
     db_csv(ID,Name,Surname,Matric,Dept,Level)
 
-    await file.save(f"{path}/{file.filename}")
+    await file.save(f"{file_path}/{file.filename}")
    # ==  Saving File to path == #
    return  jsonify({
          "ID"   :ID ,
          "Name" : Name ,
          "Surname": Surname ,
          "Matric" : Matric ,
-         "Dept"   : Dept , 
          "Level"  :Level,
+         "Dept"   : Dept , 
+         
       }),200                                
 
 #if __name__ == "__main__" : img_server_bp.run(port=90 , debug=True)
