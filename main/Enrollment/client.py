@@ -27,6 +27,7 @@ import logging as log
 # ====================== CONFIGS and HYPER PARAM ============================== #
 
 url =   'http://127.0.0.1:9000/image_server/upload'                             #<-- Route to upload images 
+
 db_dir  = 'DB' #<-- folder name 
 cwd_dir = os.getcwd() 
 cw_fldr =  os.path.join(cwd_dir , db_dir)
@@ -82,19 +83,23 @@ class Client :
             path = f"{cw_fldr}/DB.csv"
             Data.to_csv(path,index=False)
             print(f"CSV CREATED -> {path}")
-            return True 
-        except Exception as e : print(f"ERROR [ {e} ]")
+            return log.info(" [ MAIN DB_CSV FILE CrEATED ] "),True 
+
+        except Exception as e : 
+            log.error(f"ErROR [ {e} ]")
+            return print(f"ERROR [ {e} ]")
+                        
 
     def post_data_img(self) :
         self.filename = f"{self.filename}.bmp"
     
         data = {
-            "ID"      : [self.ID], 
-            "Name"    : [self.Name] ,
-            "Surname" : [self.Surname],
-            "Matric"  : [self.Matric],
-            "Level"   : [self.Level],
-            "Dept"    : [self.Dept],
+            "ID"      : self.ID, 
+            "Name"    : self.Name,
+            "Surname" : self.Surname,
+            "Matric"  : self.Matric ,
+            "Level"   : self.Level ,
+            "Dept"    : self.Dept ,
         }
         try : 
             if getFingerprintImage(portNum=self.port,baudRate=self.baud_rate,outputFileName=self.filename) == True :
@@ -110,10 +115,22 @@ class Client :
                     files=student_img
                 )
                 if self.main_csv() == True : 
+                    log.info("Successfull execution ")
                     return print(post.json()) , True
 
         except Exception as e :
             print(f"ERROR =>[ {e} ]")
+            log.error(f"ErROR [ {e} ]")
+def logger() : 
+    # FUn fact i ported to classes because i wanted to use logger 
+    log.basicConfig(
+        filename = log_file ,
+        level=log.DEBUG ,
+        encoding='utf-8'
+    )
+    Client.main_csv() 
+    Client.post_data_img()
 
-client = Client('COM9' , 115200 ,'diasasmond',212,'Diond','vuc',24010305032,'SWE',200)
-client.post_data_img()
+if __name__ == "__main__" : 
+    client = Client('COM9' , 115200 ,'diasasmond',212,'Diond','vuc',24010305032,'SWE',200)
+    client.post_data_img()
