@@ -16,14 +16,18 @@ img_server_bp = Blueprint('image_server_api',__name__,url_prefix='/image_server'
 
 cw_dir = os.getcwd()
 parent_dir = 'DB_STUDENTS'
-os.makedirs(parent_dir ,exist_ok=True) #C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\main\Enrollment\DB_STUDENTS
+os.makedirs(parent_dir ,exist_ok=True)
+ 
+file_path = os.path.join(cw_dir , parent_dir)   #C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\main\Enrollment\DB_STUDENTS
 
-file_path = os.path.join(cw_dir , parent_dir)
+
 print("=======================>",file_path)
+
 #next time use path with mkdirs for precise folder creation
 # ================================ SEVER FUNCTIONS ============================= #
 
 def db_csv(ID : int,Name : str ,Surname : str ,Matric :int ,Dept : str , Level :int ) :  #<--- Y should i stress with csv library when pandascan do it 
+   global student_folder 
    Data = {
       "ID"      : [ID],
       "Name"    : [Name] ,
@@ -35,7 +39,7 @@ def db_csv(ID : int,Name : str ,Surname : str ,Matric :int ,Dept : str , Level :
 
    data = pd.DataFrame(Data) 
 
-   student_folder = os.path.join(file_path , f'{Name}')
+   student_folder = os.path.join(file_path , f'{Name}_{Surname}')
    os.makedirs(student_folder,exist_ok=True)
            
    
@@ -67,8 +71,8 @@ async def student_id() :
 
      
          
-         student_folder = os.path.join(file_path , f'{Name}')
-         os.makedirs(student_folder,exist_ok=True)
+         # student_folder = os.path.join(file_path , f'{Name}')
+         # os.makedirs(student_folder,exist_ok=True)
 
          print("=================",student_folder)
          
