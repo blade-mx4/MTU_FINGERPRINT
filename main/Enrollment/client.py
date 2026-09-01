@@ -42,7 +42,7 @@ log_file = f"{log_file}/Enrollment.log"
 # ======= Logger ======== #
 log.basicConfig(
     filename = log_file ,
-    level = log.INFO ,
+    level = log.DEBUG ,
     encoding='utf-8'
 )
 Log = log.getLogger(__name__)
@@ -79,7 +79,7 @@ class Client :
             with open(path, 'w') as f : 
                 csv_write = csv.writer(f)
                 csv_write.writerow(header)
-            
+            Log.info(f"[Created MAIN CSV ]")
     def main_csv(self) :
         if self.csv_main_init() == True : 
             try :
@@ -88,11 +88,14 @@ class Client :
                 self.Matric = str(self.Matric)
 
                 if self.Level not in level :
+                    Log.error("ERORR : [ INVALID LEVEL PASSED BY USER ]")
                     return print("INVALID LEVEL")
                 else : pass 
 
                 if len(self.Matric) == 11 : pass 
-                else : return print("INVALID Matric")
+                else : 
+                    Log.error("ERROR : [ INVALID MATRIC PASSED BYT USER ]")
+                    return print("INVALID Matric")
 
                 if self.Name and self.Surname == None : return print(" Input Complete Name ")
                 else : pass 
@@ -117,7 +120,9 @@ class Client :
             except Exception as e : 
                 Log.error(f"ErROR [ {e} ]")
                 return print(f"ERROR [ {e} ]")
-        else : self.csv_main_init()
+        else : 
+            Log.critical("CRITICAL : [ MAIN CSV NOT FOUND ]")
+            print(" CANT FIND MAIN CSV ")
 
     def post_data_img(self) :
         self.filename = f"{self.filename}.bmp"
@@ -144,7 +149,7 @@ class Client :
                     files=student_img
                 )
                 if self.main_csv() == True : 
-                    Log.info("Successfull execution ")
+                    Log.info("INFO : [Successfull execution ]")
                     return print(post.json()) , True
 
         except Exception as e :
@@ -153,5 +158,5 @@ class Client :
 
 
 if __name__ == "__main__" : 
-    client = Client('COM9' , 115200 ,'diasasmond',212,'Didsdoewed','vuasdsasc',24010305032,'SWE',200)
+    client = Client('COM9' , 115200 ,'diasasmewond',212,'Didsdoewed','vusasc',24010305032,'StytWE',200)
     client.post_data_img()
