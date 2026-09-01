@@ -1,15 +1,27 @@
+"""
+Heavy Implementation of Threading is Needed Here
+
+"""
+import logging as log 
 from serial import Serial 
 from serial.tools import list_ports 
 from time import sleep
-
 import threading
 from getImage import getFingerprintImage
-
+import os 
 
 # ==== Configs ==== #
 BAUDRATE = 115200 
+cw_dir = os.getcwd() 
 
-class COM_PORT() : 
+log_folder = os.path.join(cw_dir , '')
+
+log.basicConfig(
+    filename=
+
+)
+
+class COM_PORT() : #<-- removes self  
     def port_find() : 
         port_list = []
         for port in list_ports.comports() :
@@ -27,6 +39,16 @@ class COM_PORT() :
 
 
             user_input = input("ENTER ID : ").strip()
+            """
+            
+            Once Users has inputed ID the id is taking in by a function to search a
+            hash map for the location of the img that was enrolled 
+            and also the details of the student tied to the id 
+            
+            then send the img to the server for the model inference 
+            and the id to the esp32 personal client 
+
+            """
             ser.write((user_input + '\n').encode())
             sleep(0.01)
 
@@ -39,6 +61,10 @@ class COM_PORT() :
 
             getFingerprintImage(portNum=port , baudRate=BAUDRATE,outputFileName=f"{user_input}.bmp")
 
+            """
+            After this a function to send the img to the server also as the code is goin on 
+            
+            """
 
 
         except Exception as e    :
