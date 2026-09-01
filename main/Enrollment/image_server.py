@@ -21,8 +21,6 @@ os.makedirs(parent_dir ,exist_ok=True)
 file_path = os.path.join(cw_dir , parent_dir)   #C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\main\Enrollment\DB_STUDENTS
 
 
-print("=======================>",file_path)
-
 #next time use path with mkdirs for precise folder creation
 # ================================ SEVER FUNCTIONS ============================= #
 
@@ -75,8 +73,6 @@ async def student_id() :
          # student_folder = os.path.join(file_path , f'{Name}')
          # os.makedirs(student_folder,exist_ok=True)
 
-         print("=================",student_folder)
-         
          await file.save(f"{student_folder}/{file.filename}")
          
       # ==  Saving File to path == #
