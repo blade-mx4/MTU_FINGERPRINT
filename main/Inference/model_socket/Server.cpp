@@ -38,7 +38,7 @@ void img_load(tcp :: socket &Server) {
         char buff[8192] ;
 
         while (true){ 
-            size_t img_bytes = Server.read_some(buffer (buff)) ;
+            size_t img_bytes = Server.read_some(buffer (buff),ErRoR) ;
 
             if (img_bytes > 0 ){
                 File.write(buff , img_bytes) ;
