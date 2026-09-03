@@ -1,0 +1,90 @@
+/*
+Apperently there are billions of ways to write servers in boost asio but this is the style i choose
+C++ tcp Server for receiving img 
+
+
+*/
+#include<iostream>
+#include<boost/asio.hpp> 
+#include<filesystem>
+#include<fstream>
+
+using namespace std ;
+using namespace boost ;
+using namespace boost :: asio ; 
+using namespace boost :: asio :: ip ; 
+
+
+using system :: error_code ;
+namespace ps = std :: filesystem ;
+
+// ==== Configs and Hyper Params ==== //  
+
+string host = "127.0.0.1"; // 0.0.0.0 for test 
+int port    = 4000 ;
+
+
+void img_load(tcp :: socket &Server) {
+
+    system :: error_code ERORR ;
+    ofstream File("test.bmp" , std :: ios ::binary ) ;
+    
+    try {
+        if (!File.is_open()) {
+            cerr << " File Error " ;
+            return ;
+        }
+
+        char buff[8192] ;
+
+        while (true){ 
+            size_t img_bytes = Server.read_some(buffer (buff)) ;
+
+            if (img_bytes > 0 ){
+                File.write(buff , img_bytes) ;
+
+            }
+            if (ERORR == error::eof ) { // boost :: asio ::erroro
+                cout<< " File Uploaded SuccessFully ! " ;
+                break ;
+
+            }
+            else {
+                throw " Undefined Error " ;
+            }
+
+        }
+
+    }
+    catch(std :: exception &e) {
+        cerr << "Error : " << e.what() << "\n" ;
+    }
+
+
+
+}
+
+// ==== Main to test function to be written here ====// 
+int main() { 
+    cout<<"===== Server Started ==== " <<"\n"<<"Listening..."<<" IP : " <<host <<" Port : " << port << "\n";
+    io_context io ;
+    ip ::address Host = make_address(host) ; // converting the host to a acceptable ip for boost 
+    tcp::endpoint socket_address (Host , port) ;
+    tcp::acceptor socket (io,socket_address) ;//bind to the endpoint 
+    
+    try {
+        tcp :: socket Server(io) ; 
+        socket.accept(Server) ;
+
+        img_load(Server) ;
+
+
+
+    }
+    catch(std :: exception &e) {
+        std :: cerr << "ERROR : "<< e.what()  << "\n" ;
+    }
+    
+
+
+}
