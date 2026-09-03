@@ -26,7 +26,7 @@ int port    = 4000 ;
 
 void img_load(tcp :: socket &Server) {
 
-    system :: error_code ERORR ;
+    system :: error_code ErRoR ;
     ofstream File("test.bmp" , std :: ios ::binary ) ;
     
     try {
@@ -44,13 +44,13 @@ void img_load(tcp :: socket &Server) {
                 File.write(buff , img_bytes) ;
 
             }
-            if (ERORR == error::eof ) { // boost :: asio ::erroro
+            if (ErRoR == error::eof ) { // boost :: asio ::erroro
                 cout<< " File Uploaded SuccessFully ! " ;
                 break ;
 
             }
-            else {
-                throw " Undefined Error " ;
+            else if (ErRoR) {
+                std :: cerr << "ERORR :  " << ErRoR.message() << "\n";  
             }
 
         }
