@@ -16,7 +16,8 @@ using namespace boost :: asio :: ip ;
 
 
 using system :: error_code ;
-namespace ps = std :: filesystem ;
+namespace os = std :: filesystem ;
+using std::cout;
 
 // ==== Configs and Hyper Params ==== //  
 
@@ -24,10 +25,17 @@ string host = "127.0.0.1"; // 0.0.0.0 for test
 int port    = 4000 ;
 
 
+
 void img_load(tcp :: socket &Server) {
+    os::path cwd_dir = os ::current_path() ;
+    os::path img_dir = "img_inference"  ;
+    os::path img_folder = cwd_dir /img_dir ;
+    
+    os::create_directory(img_folder); 
+    string img_name = "test.bmp" ;
 
     system :: error_code ErRoR ;
-    ofstream File("test.bmp" , std :: ios ::binary ) ;
+    ofstream File(img_folder/img_name, std :: ios ::binary ) ;
     
     try {
         if (!File.is_open()) {
@@ -38,7 +46,7 @@ void img_load(tcp :: socket &Server) {
         char buff[8192] ;
 
         while (true){ 
-            size_t img_bytes = Server.read_some(buffer (buff),ErRoR) ;
+            size_t img_bytes = Server.read_some(buffer (buff),ErRoR) ; //boost ::asio::buffer
 
             if (img_bytes > 0 ){
                 File.write(buff , img_bytes) ;
