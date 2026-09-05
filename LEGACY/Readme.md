@@ -1,1 +1,0 @@
-```Just the old code for each part i rewrite for ref ``
