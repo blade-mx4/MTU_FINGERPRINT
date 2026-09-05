@@ -2,12 +2,13 @@
 Apperently there are billions of ways to write servers in boost asio but this is the style i choose
 C++ tcp Server for receiving img 
 
-
+ g++ Server.cpp Log.cpp -o Server_LOG.exe -lws2_32 -lmswsock 
 */
 #include<iostream>
 #include<boost/asio.hpp> 
 #include<filesystem>
 #include<fstream>
+#include "LOG.h" // Implementing my Logging library 
 
 using namespace std ;
 using namespace boost ;
@@ -24,6 +25,7 @@ using std::cout;
 string host = "127.0.0.1"; // 0.0.0.0 for test 
 int port    = 4000 ;
 
+Log::Logger Console("file.txt" ,true) ; 
 
 
 void img_load(tcp :: socket &Server) {
@@ -39,7 +41,7 @@ void img_load(tcp :: socket &Server) {
     
     try {
         if (!File.is_open()) {
-            cerr << " File Error " ;
+            cerr << "File Error "<<"\n" ; Console.log_file("FILE RELATED ERROR",LEVEL ::ErROR) ;
             return ;
         }
 
@@ -53,12 +55,14 @@ void img_load(tcp :: socket &Server) {
 
             }
             if (ErRoR == error::eof ) { // boost :: asio ::erroro
-                cout<< " File Uploaded SuccessFully ! " ;
+            //    cout<< " File Uploaded SuccessFully ! " <<"\n";
+                Console.log_file("FILE UPLOADED SUCCESSFULLY " , LEVEL ::INFO) ;
                 break ;
 
             }
             else if (ErRoR) {
                 std :: cerr << "ERORR :  " << ErRoR.message() << "\n";  
+                Console.log_file("IMAGE RECIVEING FAILED",LEVEL::ErROR) ;
             }
 
         }
@@ -66,6 +70,7 @@ void img_load(tcp :: socket &Server) {
     }
     catch(std :: exception &e) {
         cerr << "Error : " << e.what() << "\n" ;
+        Console.log_file("IMG READ FUNCTION NOT WORKIN",LEVEL::CRITICAL) ;
     }
 
 
@@ -75,24 +80,27 @@ void img_load(tcp :: socket &Server) {
 // ==== Main to test function to be written here ====// 
 int main() { 
     cout<<"===== Server Started ==== " <<"\n"<<"Listening..."<<" IP : " <<host <<" Port : " << port << "\n";
+    Console.log_file("SERVER STARTED",LEVEL::INFO) ;
+
     io_context io ;
     ip ::address Host = make_address(host) ; // converting the host to a acceptable ip for boost 
     tcp::endpoint socket_address (Host , port) ;
     tcp::acceptor socket (io,socket_address) ;//bind to the endpoint 
     
     try {
+        while (true){
+        
         tcp :: socket Server(io) ; 
         socket.accept(Server) ;
 
         img_load(Server) ;
-
+        }
 
 
     }
     catch(std :: exception &e) {
         std :: cerr << "ERROR : "<< e.what()  << "\n" ;
+        Console.log_file("SERVER CRASH",LEVEL ::CRITICAL) ;
     }
     
-
-
 }
