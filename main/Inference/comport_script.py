@@ -12,13 +12,16 @@ from time import sleep
 import threading
 from getImage import getFingerprintImage
 import os 
-from socket import socket
+import socket
 
 
 # ==== Configs and paths ==== #
 
 BAUDRATE = 115200 
 cw_dir = os.getcwd() 
+ip = "127.0.0.1"
+port = 4000 
+
 
 log_folder = os.path.join(cw_dir , 'COMPORT_WORKER_LOG')
 finger_img =os.path.join(cw_dir , 'img_for_inference') #<- folder to store img that would e sent to server 
@@ -45,6 +48,7 @@ class COM_PORT() : #<-- removes self :- )
         return port_list
 
     def ser_int(port) : # Connect to the port and read from it 
+        # global user_input 
         try : 
             ser = Serial(port=port , baudrate = BAUDRATE , timeout=None)
 
@@ -55,11 +59,13 @@ class COM_PORT() : #<-- removes self :- )
             
 
                 user_input = input("ENTER ID : ").strip()
-                
+
+             
+
                 """
                 
                 Once Users has inputed ID the id is taking in by a function to search a
-                hash map for the location of the img that was enrolled 
+                hash map or path of the img that was enrolled 
                 and also the details of the student tied to the id 
                 
                 then send the img to the server for the model inference 
@@ -72,14 +78,18 @@ class COM_PORT() : #<-- removes self :- )
 
                 response = ser.read(ser.in_waiting or 1 ).decode(errors='replace')
                 print(response)
-                
-                sleep(0.05) #=========
-                ser.close()           #=========== small wait to preent wat i cant see 
-                sleep(0.05) #=========
 
-                client_img = f"{finger_img}/{user_input}.bmp"
+                thread = threading.Thread(target=file_search ,args=(user_input,))
+                thread = thread.start() 
+
                 
-                getFingerprintImage(portNum=port , baudRate=BAUDRATE,outputFileName=client_img)
+                # sleep(0.05) #=========
+                # ser.close()           #=========== small wait to preent wat i cant see 
+                # sleep(0.05) #=========
+
+                # client_img = f"{finger_img}/{user_input}.bmp"
+                
+                # getFingerprintImage(portNum=port , baudRate=BAUDRATE,outputFileName=client_img)
 
                 """
                 After this a function to send the img to the server also as the code is goin on 
@@ -114,8 +124,37 @@ def thread_er() :
         t.start() 
     for t in thread_pool : t.join()
 
-def file_search (str : id)  :   #<--- Open file from path and send to the server 
+class img_error (Exception) :
+    pass 
+
+def file_search(id : str)  :   #<--- Open file from path and send to the server 
+    img_file = f'{id}.bmp'
+    path = r"C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\main\Enrollment\IMG_DB"
+    # print(os.listdir(path))
+
+    file_path = os.path.join(path,img_file)
+    print(file_path)
+
+    tcp_client = socket.socket(socket.AF_INET)
+    try : 
+        if img_file in os.listdir(path) :
+            tcp_client.connect((ip,port))
+            with open(file_path ,'rb') as file : 
+                while True :
+                    img_stream = file.read(8021)
+                    if not img_stream : break  
+                    tcp_client.sendall(img_stream)
+            tcp_client.shutdown(socket.SHUT_WR)
+            tcp_client.close()
+        else : 
+            raise img_error("File not Found ")
+        
+    except Exception as e :
+        print(f"ERROR - >{e}")
+
+
 
 
 if __name__ == "__main__" : 
     thread_er()
+   
