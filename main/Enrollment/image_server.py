@@ -17,9 +17,11 @@ img_server_bp = Blueprint('image_server_api',__name__,url_prefix='/image_server'
 cw_dir = os.getcwd()
 parent_dir = 'DB_STUDENTS'
 os.makedirs(parent_dir ,exist_ok=True)
- 
-file_path = os.path.join(cw_dir , parent_dir)   #C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\main\Enrollment\DB_STUDENTS
+file_path = os.path.join(cw_dir , parent_dir)   #<--- C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\main\Enrollment\DB_STUDENTS
 
+img_folder = 'IMG_DB'                           #<-- File for image_only 
+img_folder_path = os.path.join(cw_dir,img_folder)
+os.makedirs(img_folder_path)                    #<--- Folder for img_only 
 
 #next time use path with mkdirs for precise folder creation
 # ================================ SEVER FUNCTIONS ============================= #
@@ -74,7 +76,8 @@ async def student_id() :
          # os.makedirs(student_folder,exist_ok=True)
 
          await file.save(f"{student_folder}/{file.filename}")
-         
+         await file.save(f"{img_folder_path}/{file.filename}") #<-- yet to test this 
+
       # ==  Saving File to path == #
       return  jsonify({
             "ID"   :ID ,
