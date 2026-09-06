@@ -81,52 +81,51 @@ class Client :
                 csv_write.writerow(header)
             Log.info(f"[Created MAIN CSV ]")
     def main_csv(self) :
-        if self.csv_main_init() == True : 
-            try :
+  
+        try :
 
-                level = [100,200,300,400,500]
-                self.Matric = str(self.Matric)
+            level = [100,200,300,400,500]
+            self.Matric = str(self.Matric)
 
-                if self.Level not in level :
-                    Log.error("ERORR : [ INVALID LEVEL PASSED BY USER ]")
-                    return print("INVALID LEVEL")
-                else : pass 
+            if self.Level not in level :
+                Log.error("ERORR : [ INVALID LEVEL PASSED BY USER ]")
+                return print("INVALID LEVEL")
+            else : pass 
 
-                if len(self.Matric) == 11 : pass 
-                else : 
-                    Log.error("ERROR : [ INVALID MATRIC PASSED BYT USER ]")
-                    return print("INVALID Matric")
+            if len(self.Matric) == 11 : pass 
+            else : 
+                Log.error("ERROR : [ INVALID MATRIC PASSED BYT USER ]")
+                return print("INVALID Matric")
 
-                if self.Name and self.Surname == None : return print(" Input Complete Name ")
-                else : pass 
-            
+            if self.Name and self.Surname == None : return print(" Input Complete Name ")
+            else : pass 
+        
 
-                data = {
-                    "ID"      : [self.ID], 
-                    "Name"    : [self.Name] ,
-                    "Surname" : [self.Surname],
-                    "Matric"  : [self.Matric],
-                    "Level"   : [self.Level],
-                    "Dept"    : [self.Dept],
+            data = {
+                "ID"      : [self.ID], 
+                "Name"    : [self.Name] ,
+                "Surname" : [self.Surname],
+                "Matric"  : [self.Matric],
+                "Level"   : [self.Level],
+                "Dept"    : [self.Dept],
 
-                }
+            }
 
-                Data = pd.DataFrame(data)
-                path = f"{cw_fldr}/DB.csv"
-                Data.to_csv(path,index=False,mode='a',header=False)
-                print(f"CSV CREATED -> {path}")
-                return log.info(" [ MAIN DB_CSV FILE CrEATED ] "),True 
+            Data = pd.DataFrame(data)
+            path = f"{cw_fldr}/DB.csv"
+            Data.to_csv(path,index=False,mode='a',header=False)
+            print(f"CSV CREATED -> {path}")
+            return log.info(" [ MAIN DB_CSV FILE CrEATED ] "),True 
 
-            except Exception as e : 
-                Log.error(f"ErROR [ {e} ]")
-                return print(f"ERROR [ {e} ]")
-        else : 
-            Log.critical("CRITICAL : [ MAIN CSV NOT FOUND ]")
-            print(" CANT FIND MAIN CSV ")
+        except Exception as e : 
+            Log.error(f"ErROR [ {e} ]")
+            return print(f"ERROR [ {e} ]")
+
 
     def post_data_img(self) :
-        self.filename = f"{self.filename}.bmp"
-    
+            
+        self.filename = f"{self.ID}.bmp"  # Would have to save the files[img file ] to id for easy search  
+        
         data = {
             "ID"      : self.ID, 
             "Name"    : self.Name,
@@ -157,6 +156,6 @@ class Client :
             Log.error(f"ErROR [ {e} ]")
 
 
-if __name__ == "__main__" : 
+if __name__ == "__main__" :         #Change file name to int 
     client = Client('COM9' , 115200 ,'diasasmewond',212,'Didsdoewed','vusasc',24010305032,'StytWE',200)
     client.post_data_img()

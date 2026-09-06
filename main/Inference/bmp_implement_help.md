@@ -36,3 +36,20 @@ The esp32 and pizer is a node
 
 # PROPOSED DESIGN 2 
 design 1 would have a bit of a lag issue so the best is edge compute 
+
+
+```
+
+This Script runs through a singular pizero conected to let say 4 esp32
+
+            [    esp32 --> pizero/pi --wifi--> Server  ]
+
+then loops through automatically throughthe available ports and connectes automatically
+instead of hardcoding ports{which works}
+also allowing multiport connection from different ports with threading 
+
+
+Also after getting the id and img the script has to route the id and img to the server correctly 
+
+
+```

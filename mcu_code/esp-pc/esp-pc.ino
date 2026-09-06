@@ -20,14 +20,25 @@ void loop() {
     
     int id = Serial.readStringUntil('\n').toInt() ;
     Serial.print(id) ;
-    getimg() ;
+    get_img() ;
+    
     while (true){ yield(); } // pause the code for testing sake 
+    
+   /*delay(1);*/ // <-- add later 
+
 }
 
 
 /*
 Basically user input the id from serial console {pyserial} 
 then the model prints {Godman}
+
+Just prototyping till i get touchpad 
+Original Implementaation 
+
+just the way there is input id same for touch pad once done inputing id 
+
+
 
 
 */

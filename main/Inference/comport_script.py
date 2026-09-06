@@ -12,13 +12,13 @@ from time import sleep
 import threading
 from getImage import getFingerprintImage
 import os 
-import socket  
+from socket import socket
 
-# ==== Configs ==== #
+
+# ==== Configs and paths ==== #
+
 BAUDRATE = 115200 
 cw_dir = os.getcwd() 
-
-
 
 log_folder = os.path.join(cw_dir , 'COMPORT_WORKER_LOG')
 finger_img =os.path.join(cw_dir , 'img_for_inference') #<- folder to store img that would e sent to server 
@@ -35,8 +35,6 @@ log.basicConfig(
 
 )
 Log = log.getLogger(__name__)
-
-
 
 class COM_PORT() : #<-- removes self :- ) 
     def port_find() : 
@@ -68,6 +66,7 @@ class COM_PORT() : #<-- removes self :- )
                 and the id to the esp32 personal client 
 
                 """
+                
                 ser.write((user_input + '\n').encode())
                 sleep(0.01)
 
@@ -103,6 +102,9 @@ port_search = COM_PORT.port_find()
 
 print(port_search)
 
+# ==== Other Functions ==== # 
+
+
 def thread_er() : 
     Log.info("INFO :[ INITATING THREAD ]")
     thread_pool = [] 
@@ -111,6 +113,9 @@ def thread_er() :
         thread_pool.append(t)
         t.start() 
     for t in thread_pool : t.join()
+
+def file_search (str : id)  :   #<--- Open file from path and send to the server 
+
 
 if __name__ == "__main__" : 
     thread_er()
