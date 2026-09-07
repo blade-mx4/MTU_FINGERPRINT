@@ -52,18 +52,15 @@ class COM_PORT() : #<-- removes self :- )
         try : 
             ser = Serial(port=port , baudrate = BAUDRATE , timeout=None)
 
-            while ser.is_open :
+            while True :
                 if ser.is_open : 
                     line =  ser.read_until(b' Input ID : ').decode('utf-8')
                     print(line)
             
 
-                user_input = input("ENTER ID : ").strip()
-
-             
+                user_input = input("ENTER ID : ").strip()            
 
                 """
-                
                 Once Users has inputed ID the id is taking in by a function to search a
                 hash map or path of the img that was enrolled 
                 and also the details of the student tied to the id 
@@ -83,13 +80,14 @@ class COM_PORT() : #<-- removes self :- )
                 thread = thread.start() 
 
                 
-                # sleep(0.05) #=========
-                # ser.close()           #=========== small wait to preent wat i cant see 
-                # sleep(0.05) #=========
+                sleep(0.05) #=========
+                ser.close()           #=========== small wait to preent wat i cant see 
+                sleep(0.05) #=========
 
-                # client_img = f"{finger_img}/{user_input}.bmp"
+                client_img = f"{finger_img}/{user_input}.jpg"
                 
-                # getFingerprintImage(portNum=port , baudRate=BAUDRATE,outputFileName=client_img)
+                getFingerprintImage(portNum=port , baudRate=BAUDRATE,outputFileName=client_img)
+                threading.Thread(target=inference_img_server , args=(client_img,)).start()
 
                 """
                 After this a function to send the img to the server also as the code is goin on 
@@ -127,31 +125,50 @@ def thread_er() :
 class img_error (Exception) :
     pass 
 
-def file_search(id : str)  :   #<--- Open file from path and send to the server 
-    img_file = f'{id}.bmp'
+def file_search(id : str ):   #<--- Open file from path and send to the server 
+    img_file = f'{id}.jpg'
     path = r"C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\main\Enrollment\IMG_DB"
     # print(os.listdir(path))
-
+    
     file_path = os.path.join(path,img_file)
     print(file_path)
 
-    tcp_client = socket.socket(socket.AF_INET)
+    if path !=None  :   
+        try : 
+            tcp_client = socket.socket(socket.AF_INET , socket.SOCK_STREAM)
+            if img_file in os.listdir(path) :
+                tcp_client.connect((ip,port))
+                with open(file_path ,'rb') as file : 
+                    while True :
+                        img_stream = file.read(8021)
+                        if not img_stream : break  
+                        tcp_client.sendall(img_stream)
+                tcp_client.shutdown(socket.SHUT_WR)
+                tcp_client.close()
+            else : 
+                raise img_error("File not Found ")
+            
+        except Exception as e :
+            print(f"ERROR - >{e}")
+
+def inference_img_server(path : str ) : 
+
     try : 
-        if img_file in os.listdir(path) :
+        tcp_client = socket.socket(socket.AF_INET , socket.SOCK_STREAM) 
+        if path : 
             tcp_client.connect((ip,port))
-            with open(file_path ,'rb') as file : 
-                while True :
+            with open(path , 'rb') as file :
+                while True : 
                     img_stream = file.read(8021)
-                    if not img_stream : break  
+                    if not img_stream : break 
                     tcp_client.sendall(img_stream)
-            tcp_client.shutdown(socket.SHUT_WR)
             tcp_client.close()
         else : 
-            raise img_error("File not Found ")
-        
+            raise "ERROR"           
     except Exception as e :
-        print(f"ERROR - >{e}")
+        print(f"ERROR -> {e}")
 
+    
 
 
 
