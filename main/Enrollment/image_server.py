@@ -21,7 +21,7 @@ file_path = os.path.join(cw_dir , parent_dir)   #<--- C:\Users\blade_mx4\Documen
 
 img_folder = 'IMG_DB'                           #<-- File for image_only 
 img_folder_path = os.path.join(cw_dir,img_folder)
-os.makedirs(img_folder_path)                    #<--- Folder for img_only 
+os.makedirs(img_folder_path,exist_ok=True)                    #<--- Folder for img_only 
 
 #next time use path with mkdirs for precise folder creation
 # ================================ SEVER FUNCTIONS ============================= #
@@ -45,8 +45,6 @@ def db_csv(ID : int,Name : str ,Surname : str ,Matric :int ,Dept : str , Level :
    
    data.to_csv(f"{student_folder}/{Name}_{Surname}.csv",index=False)
 
-
-
 # ============================================================================= #
 
 @img_server_bp.route('/upload' ,methods = ['POST'])
@@ -68,10 +66,7 @@ async def student_id() :
       file =  (await request.files).get("student_img")
 
       if file : 
-         db_csv(ID,Name,Surname,Matric,Dept,Level)
-
-     
-         
+         db_csv(ID,Name,Surname,Matric,Dept,Level)        
          # student_folder = os.path.join(file_path , f'{Name}')
          # os.makedirs(student_folder,exist_ok=True)
 

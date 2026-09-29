@@ -24,13 +24,14 @@ using std::cout;
 // ==== Configs and Hyper Params ==== //  
 
 std :: string host = "127.0.0.1"; // 0.0.0.0 for test 
-int port    = 4000 ;
+int port = 4000 ;
 os::path cwd_dir = os ::current_path() ;
 Log::Logger Console("file.txt" ,true) ;
 
-os::path img_dir = "IMGFORTF"  ;
+os::path img_dir = "IMG_FOR_TF"  ;
 os::path img_folder = cwd_dir /img_dir ;   
 
+#define BUFF 8192 // alocate the buff mem at commpile time 
 
 void img_load(tcp :: socket &Server) {  
     os::create_directory(img_folder); 
@@ -46,7 +47,7 @@ void img_load(tcp :: socket &Server) {
             return ;
         }
 
-        char buff[8192] ;
+        char buff[BUFF] ;
 
         while (true){ 
             size_t img_bytes = Server.read_some(buffer (buff),ErRoR) ; //boost ::asio::buffer
@@ -88,7 +89,7 @@ void load_img_2(tcp :: socket &Server){
         if (!File_1.is_open()){
             std :: cerr << "File Error "<<"\n" ; Console.log_file("FILE RELATED ERROR",LEVEL ::ErROR) ;
         }
-        char buff_2[8192] ;
+        char buff_2[BUFF] ;
         
       
 
@@ -140,12 +141,9 @@ int main() {
         socket.accept(Server_2) ;
         load_img_2(Server_2) ;
 
-    
         // while (img_load(Server) != true ){
         //     //existential loop 
         // }
-
-
     
     }
 

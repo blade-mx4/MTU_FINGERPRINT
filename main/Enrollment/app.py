@@ -1,8 +1,6 @@
 """
 Moved from flask to quart 
 They r basically the same framework 
-
-
 """
 from quart import Quart
 from image_server import img_server_bp 
@@ -15,5 +13,4 @@ def Server_Main() :
     return app 
 
 if __name__ == "__main__" : 
-    
     Server_Main().run(port=9000,debug=True) #<-- Naughty oneliner

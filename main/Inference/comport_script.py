@@ -150,6 +150,7 @@ def file_search(id : str ):   #<--- Open file from path and send to the server
             
         except Exception as e :
             print(f"ERROR - >{e}")
+    else : raise img_error("No file path specified")
 
 def inference_img_server(path : str ) : 
 
@@ -167,10 +168,6 @@ def inference_img_server(path : str ) :
             raise "ERROR"           
     except Exception as e :
         print(f"ERROR -> {e}")
-
-    
-
-
 
 if __name__ == "__main__" : 
     thread_er()
