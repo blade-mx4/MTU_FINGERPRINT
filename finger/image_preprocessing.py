@@ -56,7 +56,7 @@ def main () :
     _ , thresh = cv2.threshold(clahe_img , 2,255,cv2.THRESH_OTSU + cv2.THRESH_BINARY)
 
     img__ =  cv2.bitwise_and(clahe_img , img)
-
+    
     cv2.imshow("clahe" , clahe_img)
     cv2.imshow("Original" ,img)
     cv2.imshow("Thresh", img__)
