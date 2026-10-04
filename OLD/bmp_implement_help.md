@@ -53,3 +53,33 @@ Also after getting the id and img the script has to route the id and img to the 
 
 
 ```
+
+
+# IMPLEMENTATON 1 { FLANN ALGO } 
+
+```
+with the help of flann and c++ and since i ditched neural net
+speed is guranteed the only bottle neck is the sensors img readin speed 
+
+
+inference steps : 
+1. the esp32 send img to piserver over wifi
+2. the server does the processin there 
+3. send results back via wifi 
+pros {of wifi} :
+1. info transmission is easier 
+2. easy to handle on like serial 
+cons : 
+1. img may get corrupt during transfer 
+
+                                            +------------------+
+    +------------+                          |                  |    DB is stored (here)
+    | esp32      |      ===={wifi}=== >     |   pizero server  |
+    +------------+                          |                  |
+                                            +------------------+
+
+
+
+
+
+```

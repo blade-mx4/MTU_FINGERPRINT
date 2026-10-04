@@ -2,9 +2,6 @@
 #include <fpm.h>
 /*
 Using HardWare Serial for my esp32 
-
-
-
 */
 
 #define RX_PIN 16

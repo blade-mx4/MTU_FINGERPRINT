@@ -56,10 +56,8 @@ class COM_PORT() : #<-- removes self :- )
                 if ser.is_open : 
                     line =  ser.read_until(b' Input ID : ').decode('utf-8')
                     print(line)
-            
-
+        
                 user_input = input("ENTER ID : ").strip()            
-
                 """
                 Once Users has inputed ID the id is taking in by a function to search a
                 hash map or path of the img that was enrolled 
@@ -67,16 +65,14 @@ class COM_PORT() : #<-- removes self :- )
                 
                 then send the img to the server for the model inference 
                 and the id to the esp32 personal client 
-
                 """
-                
                 ser.write((user_input + '\n').encode())
                 sleep(0.01)
 
                 response = ser.read(ser.in_waiting or 1 ).decode(errors='replace')
                 print(response)
 
-                thread = threading.Thread(target=file_search ,args=(user_input,))
+                thread = threading.Thread(target=file_search ,args=(user_input,))   # Starts file search thread 
                 thread = thread.start() 
 
                 
@@ -84,14 +80,13 @@ class COM_PORT() : #<-- removes self :- )
                 ser.close()           #=========== small wait to preent wat i cant see 
                 sleep(0.05) #=========
 
-                client_img = f"{finger_img}/{user_input}.jpg"
+                client_img = f"{finger_img}/{user_input}.bmp"
                 
                 getFingerprintImage(portNum=port , baudRate=BAUDRATE,outputFileName=client_img)
                 threading.Thread(target=inference_img_server , args=(client_img,)).start()
 
                 """
                 After this a function to send the img to the server also as the code is goin on 
-                
                 """
 
                 Log.info("INFO : [OPERATION SUCCESFUL]")
@@ -126,7 +121,8 @@ class img_error (Exception) :
     pass 
 
 def file_search(id : str ):   #<--- Open file from path and send to the server 
-    img_file = f'{id}.jpg'
+    """ Uses the ID inputed from the  user to look for the img in the folder and send to the """
+    img_file = f'{id}.bmp'
     path = r"C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\main\Enrollment\IMG_DB"
     # print(os.listdir(path))
     
@@ -153,7 +149,7 @@ def file_search(id : str ):   #<--- Open file from path and send to the server
     else : raise img_error("No file path specified")
 
 def inference_img_server(path : str ) : 
-
+    """ Send image to the inference server """
     try : 
         tcp_client = socket.socket(socket.AF_INET , socket.SOCK_STREAM) 
         if path : 

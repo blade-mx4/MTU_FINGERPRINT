@@ -50,10 +50,10 @@ Log = log.getLogger(__name__)
 # ======================================= #
 
 class Client : 
-    def __init__(self,port,baud_rate,file_name,ID : int , Name:str , Surname:str , Matric : int ,Dept : str,  Level :int ):
+    def __init__(self,port,baud_rate,ID : int , Name:str , Surname:str , Matric : int ,Dept : str,  Level :int ):
         self.port = port 
         self.baud_rate = baud_rate 
-        self.filename = file_name 
+        self.filename = ""  # file name would be id for easy search 
         self.ID = ID 
         self.Name = Name 
         self.Surname = Surname 
@@ -124,7 +124,7 @@ class Client :
 
     def post_data_img(self) :
             
-        self.filename = f"{self.ID}.bmp"  # Would have to save the files[img file ] to id for easy search  
+        self.filename = f"{self.ID}.bmp"  # <== Would have to save the files[img file ] to id for easy search  
         
         data = {
             "ID"      : self.ID, 
@@ -150,12 +150,12 @@ class Client :
                 if self.main_csv() == True : 
                     Log.info("INFO : [Successfull execution ]")
                     return print(post.json()) , True
-
+                Log.info("INFO : [Successfull execution ]")
         except Exception as e :
             print(f"ERROR =>[ {e} ]")
             Log.error(f"ErROR [ {e} ]")
 
 
 if __name__ == "__main__" :         #Change file name to int 
-    client = Client('COM9' , 115200 ,'diasasmewond',212,'Didsdoewed','vusasc',24010305032,'StytWE',200)
-    client.post_data_img()
+    client = Client('COM9',115200 ,211,'Didsdoewed','vusasc',2401030503322,'StytWE',200)
+    client.post_data_img() 

@@ -47,19 +47,21 @@ import cv2
 
 
 def main () : 
-    path = r"C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\finger\victor.bmp"
-    img = cv2.imread(path , cv2.IMREAD_GRAYSCALE)
+    path_1 = r"C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\main\Enrollment\5_normal_.bmp"
+    img = cv2.imread(path_1 , cv2.IMREAD_GRAYSCALE)
     #img = cv2.GaussianBlur(img,(15,15),0)
-    calheobj = cv2.createCLAHE(clipLimit= 50,tileGridSize=(1,1)) 
+    calheobj = cv2.createCLAHE(clipLimit= 11,tileGridSize=(8,8)) 
     clahe_img = calheobj.apply(img) 
 
-    _ , thresh = cv2.threshold(clahe_img , 2,255,cv2.THRESH_OTSU + cv2.THRESH_BINARY)
+    _ , thresh = cv2.threshold(img , 2,255,cv2.THRESH_OTSU + cv2.THRESH_BINARY)
 
     img__ =  cv2.bitwise_and(clahe_img , img)
     
-    cv2.imshow("clahe" , clahe_img)
-    cv2.imshow("Original" ,img)
-    cv2.imshow("Thresh", img__)
+    # cv2.imshow("clahe" , clahe_img)
+    # cv2.imshow("Original" ,img)
+    # cv2.imshow("Thresh" ,thresh)
+    # cv2.imshow("Thresh + clahe", img__)
+    cv2.imwrite(r"C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\matchin_algo\5_clahe_.bmp",clahe_img)
     cv2.waitKey(0)
     cv2.destroyAllWindows() 
 
