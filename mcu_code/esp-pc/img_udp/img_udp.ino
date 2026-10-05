@@ -1,30 +1,59 @@
+/*
+I noticed packet where dropping during stream so tcp should go 
+*/
+
+#include <WiFi.h>
 #include<HardwareSerial.h>
-#include<fpm.h> 
+#include <NetworkUdp.h>
+#include <fpm.h> 
 
-// ====================Configs and Global Param ===================== // 
-
-#define RX 16 
-#define TX 17 
-
-HardwareSerial serial(2) ; 
-FPM finger(&serial) ;
-
+//================== Configs ======================// 
 #define PRINTF_BUF_SZ   60
 char printfBuf[PRINTF_BUF_SZ];
+#define RX_PIN 16
+#define TX_PIN 17
 
-void info(void) {
-    Serial.begin(115200) ;
-    serial.begin(57600,SERIAL_8N1,RX,TX) ;//<- this is constant 
-    if (finger.begin()) {
-        Serial.println("Sensor Connected") ;
-    }else{
-        Serial.println("Sensor Disconnected Reset MCU ") ;
-        while(true)  { yield() ;} // to stop the program and prevent it from moving this causes error  
-    }
+const char *networkName = "ABADdon";
+const char *networkPswd = "blazeday";
+const char *udpServerIp = "192.168.0.101";
+const int udpServerPort = 4000;
+NetworkUDP udp;
 
+HardwareSerial finger_serial(2) ;
+FPM finger(&finger_serial) ;
+  
+
+// ============================================== //
+
+void setup(){
+  Serial.begin(115200) ; 
+  finger_serial.begin(57600, SERIAL_8N1, RX_PIN, TX_PIN) ;
+  WiFi.mode(WIFI_STA) ; 
+  WiFi.begin(networkName ,networkPswd);
+   
+  if (!finger.begin() && WiFi.waitForConnectResult() != WL_CONNECTED ){
+    Serial.println( "Sensor Not Connected OR WIFI ERROR ") ; 
+    while (1){ yield(); }
+  }
+  Serial.println("Shit Went Down Well " ) ; 
+  
 }
 
-uint32_t get_img(void){ 
+void loop (){
+  imageToUdp() ;
+//  while(1){ yield(); }
+  delay(2000);
+}
+
+
+void wifi_status(){
+  
+}
+
+
+
+uint32_t imageToUdp(void)
+{
     FPMStatus status;
     
     /* Take a snapshot of the finger */
@@ -68,24 +97,31 @@ uint32_t get_img(void){
             Serial.println(printfBuf);
             return 0;
     }
-
-    /* Send some arbitrary signature to the PC, to indicate the start of the image stream */
-    Serial.write(0xAA);
     
     uint32_t totalRead = 0;
     uint16_t readLen = 0;
     
-    /* Now, the sensor will send us the image from its image buffer, one packet at a time.
-     * We will stream it directly to Serial. */
+    /* Now, the sensor will send us the image from its image buffer, one packet at a time. */
     bool readComplete = false;
 
     while (!readComplete) 
     {
-        bool ret = finger.readDataPacket(NULL, &Serial, &readLen, &readComplete);
+        /* Start composing a packet to the remote server */
+        udp.beginPacket(udpServerIp, udpServerPort);
+        
+        bool ret = finger.readDataPacket(NULL, &udp, &readLen, &readComplete);
         
         if (!ret)
         {
             snprintf_P(printfBuf, PRINTF_BUF_SZ, PSTR("readDataPacket(): failed after reading %u bytes"), totalRead);
+            Serial.println(printfBuf);
+            return 0;
+        }
+        
+        /* Complete the packet and send it */
+        if (!udp.endPacket())
+        {
+            snprintf_P(printfBuf, PRINTF_BUF_SZ, PSTR("imageToUdp(): failed to send packet, count = %u bytes"), totalRead);
             Serial.println(printfBuf);
             return 0;
         }
