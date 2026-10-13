@@ -1,18 +1,10 @@
 """
-Stumbled across re library python and looks helpfull in string search and sort of 
-
-"""
-"""
 Ported from flask -> quarts | async server implemented 
 Client to send the images from the sensor to the flask / quarts server  
-
-# ===================== NOTES =================================#
-
 #================== FUNTIONS ===================#
-
 # File_name can normally be the name of student             |   |   
 # Not just image but the Student details                    |   | 
-# Specail id gen must be implemented here                   | x |
+# Specail id gen must be implemented here                   |   |
 # Add error handling                                        | x | 
 
 """
@@ -36,7 +28,6 @@ os.makedirs(db_dir,exist_ok=True)
 
 log_folder_mk = os.makedirs('Enrollment_LOG',exist_ok=True)    #<--- Folder for log
 log_file = os.path.join(cwd_dir,'Enrollment_LOG')
-
 log_file = f"{log_file}/Enrollment.log"
 
 # ======= Logger ======== #
@@ -74,7 +65,6 @@ class Client :
                 "Matric"  ,
                 "Level"   ,
                 "Dept"    ,
-                
             ]
             with open(path, 'w') as f : 
                 csv_write = csv.writer(f)
@@ -83,24 +73,23 @@ class Client :
     def main_csv(self) :
   
         try :
-
             level = [100,200,300,400,500]
             self.Matric = str(self.Matric)
 
             if self.Level not in level :
                 Log.error("ERORR : [ INVALID LEVEL PASSED BY USER ]")
-                return print("INVALID LEVEL")
+                print("INVALID LEVEL")
+                return             
             else : pass 
 
             if len(self.Matric) == 11 : pass 
             else : 
-                Log.error("ERROR : [ INVALID MATRIC PASSED BYT USER ]")
-                return print("INVALID Matric")
-
+                Log.error("ERROR : [ INVALID MATRIC PASSED BY USER ]")
+                print("INVALID Matric")
+                return None 
             if self.Name and self.Surname == None : return print(" Input Complete Name ")
             else : pass 
         
-
             data = {
                 "ID"      : [self.ID], 
                 "Name"    : [self.Name] ,
@@ -108,7 +97,6 @@ class Client :
                 "Matric"  : [self.Matric],
                 "Level"   : [self.Level],
                 "Dept"    : [self.Dept],
-
             }
 
             Data = pd.DataFrame(data)
@@ -159,3 +147,8 @@ class Client :
 if __name__ == "__main__" :         #Change file name to int 
     client = Client('COM9',115200 ,211,'Didsdoewed','vusasc',2401030503322,'StytWE',200)
     client.post_data_img() 
+"""
+Some GUI NOTES : 
+1. Basically i would have to see the image to determine if the img is good enough to enter the db
+2. 
+"""

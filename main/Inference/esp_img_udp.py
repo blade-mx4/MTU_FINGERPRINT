@@ -1,22 +1,20 @@
 """
-This was Ai gen - code 
-I would have to implement the code in c++ due to my inabilty to implement it in python  
-And plus for the full set up this is slow we r already bottle necked by the sensor baudrate
+Async UDP FOR PROTOTYPE IF THEY R READY I MOVE TO c++ 
+just use pybind or just give them in pure py  
 """
+import socket 
+import struct 
+import time 
 
-import socket
-import struct
-
+# == Configs == # 
 IMAGE_WIDTH = 256
-IMAGE_HEIGHT = 288
+IMAGE_HEIGHT = 288 
 IMAGE_DEPTH = 8
 
 HOST = "0.0.0.0"
 PORT = 4000
 
-# 4-bit packed pixels: 2 pixels per byte
 RAW_SENSOR_BYTES = (IMAGE_WIDTH * IMAGE_HEIGHT) // 2  # 36,864 bytes
-
 
 def assemble_bmp_header(width: int, height: int, depth: int = 8) -> bytes:
     bmp_header = struct.Struct("<2s3L LLl2H6L")
@@ -71,30 +69,49 @@ def unpack_4bit_pixels(raw_data: bytes) -> bytes:
     return bytes(unpacked)
 
 
-if __name__ == "__main__":
-    server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server.bind((HOST, PORT))
-    print(f"Server listening on UDP {HOST}:{PORT}...")
-
-    raw_buffer = bytearray()
-
-    try:
-        while len(raw_buffer) < RAW_SENSOR_BYTES:
-            data, addr = server.recvfrom(10000)
+def Server () :  
+    raw_buffer = bytearray() 
+    _socket_ = socket.socket(socket.AF_INET , socket.SOCK_DGRAM)
+    # _socket_.setblocking(False) 
+    _socket_.bind((HOST , PORT )) 
+    print("================== Server =================== ")
+    print(f"IP  : {HOST}" , "\n" ,
+          f"PORT: {PORT}")
+    print(" ============================================= ")
+    try :
+        """
+Major Operational Bug 
+If the user forgets to their finger on the sensor
+it re-reads and sends half packets on the next loop 
+the fix : 
+    function checks the current byte and recalls the server 
+        """
+        while len(raw_buffer) < RAW_SENSOR_BYTES : 
+            data , addr = _socket_.recvfrom(8192)  
             raw_buffer.extend(data)
-            print(f"Received packet: {len(data)} bytes ({len(raw_buffer)}/{RAW_SENSOR_BYTES})")
+            print(f"{len(raw_buffer)} / {RAW_SENSOR_BYTES}")
 
         raw_buffer = raw_buffer[:RAW_SENSOR_BYTES]
-        print("Raw frame complete. Unpacking 4-bit pixels to 8-bit grayscale...")
+        print(" IMG RECEIVED ")
 
-        unpacked_raster = unpack_4bit_pixels(raw_buffer)
-        bmp_header = assemble_bmp_header(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_DEPTH)
+        unpacked_raster = unpack_4bit_pixels(raw_buffer) 
+        bmp_header = assemble_bmp_header(IMAGE_WIDTH ,IMAGE_HEIGHT ,IMAGE_DEPTH )
 
-        with open("test.bmp", "wb") as f:
-            f.write(bmp_header)
-            f.write(unpacked_raster)
+        with open("test.bmp" , "wb") as file :
+            file.write(bmp_header)
+            file.write(unpacked_raster)
+        _socket_.close()
+        """
+Matchin ops 
+Server Communication With esp32         
+        """
+        time.sleep(3)       #<-- sleep for 2 sec 
+        Server()            #<-- this is my first time using recursion and i one shot it faaaaaaaaaaaaaaaaaaawwwwwwwwwwwwwwwwwwwwwwkkkkkkkkk
 
-        print("Image saved as test.bmp (File size: ~74.8 KB).")
+        
 
-    finally:
-        server.close()
+    except Exception as e : print(f"ERROR :{e}") 
+    except KeyboardInterrupt :print()
+
+if __name__ =="__main__" :
+    Server() 
