@@ -1,10 +1,16 @@
 """
 Async UDP FOR PROTOTYPE IF THEY R READY I MOVE TO c++ 
 just use pybind or just give them in pure py  
+
+WONT WASTE TO MUCH TIME ON WAT MAY NOT BE USED 
+SO JUST THIS FOR PROTOTYPE IF AM ASKED Y IS IT SLOW 
+ANSWER : LANGUAGE CHOICE 
 """
+import os 
 import socket 
 import struct 
 import time 
+from algo import algo 
 
 # == Configs == # 
 IMAGE_WIDTH = 256
@@ -13,6 +19,10 @@ IMAGE_DEPTH = 8
 
 HOST = "0.0.0.0"
 PORT = 4000
+
+cwd = os.getcwd() 
+inference_path = os.path.join(cwd,"img_inference") 
+os.makedirs(inference_path ,exist_ok=True)
 
 RAW_SENSOR_BYTES = (IMAGE_WIDTH * IMAGE_HEIGHT) // 2  # 36,864 bytes
 
@@ -74,10 +84,10 @@ def Server () :
     _socket_ = socket.socket(socket.AF_INET , socket.SOCK_DGRAM)
     # _socket_.setblocking(False) 
     _socket_.bind((HOST , PORT )) 
-    print("================== Server =================== ")
-    print(f"IP  : {HOST}" , "\n" ,
-          f"PORT: {PORT}")
-    print(" ============================================= ")
+    print("================== Server ===================")
+    print(f"IP  : {HOST} ===============================")
+    print(f"PORT: {PORT} ===============================")
+    print("=============================================")
     try :
         """
 Major Operational Bug 
@@ -96,22 +106,28 @@ the fix :
 
         unpacked_raster = unpack_4bit_pixels(raw_buffer) 
         bmp_header = assemble_bmp_header(IMAGE_WIDTH ,IMAGE_HEIGHT ,IMAGE_DEPTH )
-
-        with open("test.bmp" , "wb") as file :
+        file = os.path.join(inference_path ,f"test.bmp")
+        print(file) 
+        with open(file, "wb") as file :
             file.write(bmp_header)
             file.write(unpacked_raster)
         _socket_.close()
+        time.sleep(2)
+        # if True :
+        #     algo(str(file))  #   <-- u knw u can simply plug thread here 🙂 
+
         """
 Matchin ops 
 Server Communication With esp32         
         """
-        time.sleep(3)       #<-- sleep for 2 sec 
-        Server()            #<-- this is my first time using recursion and i one shot it faaaaaaaaaaaaaaaaaaawwwwwwwwwwwwwwwwwwwwwwkkkkkkkkk
-
-        
+        # time.sleep(3)       #<-- sleep for 2 sec 
+        # Server()            #<-- this is my first time using recursion and i one shot it faaaaaaaaaaaaaaaaaaawwwwwwwwwwwwwwwwwwwwwwkkkkkkkkk
+        return str(file)   
 
     except Exception as e : print(f"ERROR :{e}") 
     except KeyboardInterrupt :print()
 
-if __name__ =="__main__" :
-    Server() 
+# if __name__ =="__main__" :
+    # Server() 
+    # path_from_server = Server()
+    # algo(path_from_server)    # FUCK IT IT WORKS

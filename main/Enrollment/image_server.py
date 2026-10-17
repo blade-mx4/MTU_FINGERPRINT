@@ -19,9 +19,6 @@ parent_dir = 'DB_STUDENTS'
 os.makedirs(parent_dir ,exist_ok=True)
 file_path = os.path.join(cw_dir , parent_dir)   #<--- C:\Users\blade_mx4\Documents\code\MTU-FINGERPRINT\main\Enrollment\DB_STUDENTS
 
-img_folder = 'IMG_DB'                           #<-- File for image_only 
-img_folder_path = os.path.join(cw_dir,img_folder)
-os.makedirs(img_folder_path,exist_ok=True)                    #<--- Folder for img_only 
 
 #next time use path with mkdirs for precise folder creation
 # ================================ SEVER FUNCTIONS ============================= #
@@ -41,8 +38,7 @@ def db_csv(ID : int,Name : str ,Surname : str ,Matric :int ,Dept : str , Level :
 
    student_folder = os.path.join(file_path , f'{Name}_{Surname}')
    os.makedirs(student_folder,exist_ok=True)
-           
-   
+
    data.to_csv(f"{student_folder}/{Name}_{Surname}.csv",index=False)
 
 # ============================================================================= #
@@ -67,11 +63,7 @@ async def student_id() :
 
       if file : 
          db_csv(ID,Name,Surname,Matric,Dept,Level)        
-         # student_folder = os.path.join(file_path , f'{Name}')
-         # os.makedirs(student_folder,exist_ok=True)
-
          await file.save(f"{student_folder}/{file.filename}")
-         await file.save(f"{img_folder_path}/{file.filename}") #<-- yet to test this 
 
       # ==  Saving File to path == #
       return  jsonify({

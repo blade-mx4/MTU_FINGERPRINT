@@ -1,8 +1,7 @@
 #include <WiFi.h>
 #include<HardwareSerial.h>
-#include <NetworkUdp.h>
 #include <fpm.h> 
-
+#include <NetworkUdp.h>
 NetworkUDP udp ;
 
 //================== Configs ======================// 
@@ -12,34 +11,17 @@ char printfBuf[PRINTF_BUF_SZ];
 #define RX_PIN 16
 #define TX_PIN 17
 
-
-const char *networkName = "ABADdon";
-const char *networkPswd = "blazeday";
-// const char *udpServerIp = "192.168.0.101";
+HardwareSerial finger_serial(2) ;
+FPM finger(&finger_serial) ;
+  
+const char *networkName = "Blaze_net";
+const char *networkPswd = "upperechelon";
+ const char *udpServerIp = "192.168.0.101";
 const char * IP [] = {"192.168.0.100" ,"192.168.0.101", "192.168.0.102"} ;
-const int udpServerPort = 4000;
-
-const char *ip_check(){
-    
-    for (const char *ip : IP){
-        udp.beginPacket(ip,port) ;
-        if (udp.available() !=0 ){
-            return ip ;
-        }
-        else{
-            Serial.println(".") ;
-        }
-    }
-
-    udp.end() ;
-
-}
+const int Port = 4000;
 
 
-
-
-
-uint32_t imageToUdp(const char *IP , int PORT ){
+uint32_t imageToUdp(const char *IP , int PORT ){ // Works 
     FPMStatus status;
     
     /* Take a snapshot of the finger */
