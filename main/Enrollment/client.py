@@ -61,6 +61,7 @@ class Client :
                 "Level"   ,
                 "Dept"    ,
             ]
+            
             with open(path, 'w') as f : 
                 csv_write = csv.writer(f)
                 csv_write.writerow(header)
@@ -161,11 +162,12 @@ class Client :
         
 
 if __name__ == "__main__" :         #Change file name to int 
-    client = Client('COM9',115200 ,221,'sdfbc','fsds',24023234220,'StytWE',100)
+    client = Client('COM9',115200 ,2,'Divine','utibe',24023234220,'Cyb',100)
     client.post_data_img(img_folder_path) 
 
 """
 Some GUI NOTES : 
 1. Basically i would have to see the image to determine if the img is good enough to enter the db
-2. 
+2. Able to load the img view to show the user the image taken 
+3. 
 """

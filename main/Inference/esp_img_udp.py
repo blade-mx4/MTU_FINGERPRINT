@@ -1,5 +1,5 @@
 """
-Async UDP FOR PROTOTYPE IF THEY R READY I MOVE TO c++ 
+Non-Async UDP FOR PROTOTYPE IF THEY R READY I MOVE TO c++ 
 just use pybind or just give them in pure py  
 
 WONT WASTE TO MUCH TIME ON WAT MAY NOT BE USED 
@@ -10,6 +10,8 @@ import os
 import socket 
 import struct 
 import time 
+import threading 
+from threading import Thread 
 from algo import algo 
 
 # == Configs == # 
@@ -78,7 +80,6 @@ def unpack_4bit_pixels(raw_data: bytes) -> bytes:
         unpacked[i * 2 + 1] = low_nibble * 17
     return bytes(unpacked)
 
-
 def Server () :  
     raw_buffer = bytearray() 
     _socket_ = socket.socket(socket.AF_INET , socket.SOCK_DGRAM)
@@ -111,23 +112,21 @@ the fix :
         with open(file, "wb") as file :
             file.write(bmp_header)
             file.write(unpacked_raster)
+
         _socket_.close()
         time.sleep(2)
+
         # if True :
         #     algo(str(file))  #   <-- u knw u can simply plug thread here 🙂 
 
-        """
-Matchin ops 
-Server Communication With esp32         
-        """
-        # time.sleep(3)       #<-- sleep for 2 sec 
-        # Server()            #<-- this is my first time using recursion and i one shot it faaaaaaaaaaaaaaaaaaawwwwwwwwwwwwwwwwwwwwwwkkkkkkkkk
-        return str(file)   
 
     except Exception as e : print(f"ERROR :{e}") 
     except KeyboardInterrupt :print()
 
-# if __name__ =="__main__" :
-    # Server() 
-    # path_from_server = Server()
-    # algo(path_from_server)    # FUCK IT IT WORKS
+if __name__ =="__main__" :
+    path_from_server = Server()
+    t = threading.Thread(args=(path_from_server,),target=algo)
+    # print(f"=============== InFerence ================== ", 
+        #   f"Score : {algo(path_from_server)}") 
+    t.start()
+    # algo(path_from_server)   # FUCK IT IT WORKS

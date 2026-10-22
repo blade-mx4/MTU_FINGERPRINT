@@ -4,7 +4,9 @@ import os
 """
 WO forget the multiprocessing and threading even performance in py i wont add 
 """
-IMG_DIR_PATH  = "C:/Users/blade_mx4/Documents/code/MTU-FINGERPRINT/main/Enrollment/IMG_DB"
+# IMG_DIR_PATH  = "C:/Users/blade_mx4/Documents/code/MTU-FINGERPRINT/main/Enrollment/IMG_DB"
+
+IMG_DIR_PATH  = r"C:\Users\blade_mx4\Documents\Datasets\Real\ID 1\bmp"
 THRESHOLD = .4 # the bigger the less strict the algo is   
 
 def algo(path) :
@@ -21,10 +23,12 @@ def algo(path) :
 
     sift_algo = cv2.SIFT_create() 
     count = 0
+    
+  
     for file in [file for file in os.listdir(IMG_DIR_PATH)] : 
+        key_p_1 , des_1 = sift_algo.detectAndCompute(img ,None)
         print(file , count)
         inference_img  = cv2.imread( os.path.join(IMG_DIR_PATH ,file)) 
-        key_p_1 , des_1 = sift_algo.detectAndCompute(img ,None)
         key_p_2 , des_2 = sift_algo.detectAndCompute(inference_img , None)
         count += 1
         matching_algo = cv2.FlannBasedMatcher({"algorithm" : 1 , "tree" : 5 } , {}).knnMatch(des_1 , des_2,k=2) 
@@ -42,8 +46,11 @@ def algo(path) :
             matched_img = file
             kp_1 , kp_2 ,mp = key_p_1,key_p_1,match_point
     # matched = cv2.drawMatched(img ,kp_1,inference_img,kp_2,mp,None) 
-
-    return str(best_score) , matched_img 
+    # if matched_img == None :
+        # print(f"Match Not Found")
+    print(matched_img)
+    print(best_score) 
+    return matched_img # retrurns the best matched img 
 """
 this shi is slow even with 9 img  
 fuck it 
