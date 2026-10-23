@@ -1,5 +1,0 @@
-INFO:__main__:[Created MAIN CSV ]
-INFO:root: [ MAIN DB_CSV FILE CrEATED ] 
-DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): 127.0.0.1:9000
-DEBUG:urllib3.connectionpool:http://127.0.0.1:9000 "POST /image_server/upload HTTP/1.1" 200 117
-INFO:__main__:INFO : [Successfull execution ]
